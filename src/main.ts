@@ -3,6 +3,7 @@ import { AppModule } from './app/app.module';
 import { MyConfigService } from './config/config.service';
 import { GrpcValidationPipe } from './infrastrusture/grpc/grpc.validation-pipe';
 import { GlobalGrpcExceptionFilter } from './infrastrusture/grpc/grpc.filter';
+import {createGrpcServer} from './infrastrusture/grpc/grpc.server';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,8 @@ async function bootstrap() {
   app.useGlobalPipes(new GrpcValidationPipe());
   // Map domain errors to gRPC
   app.useGlobalFilters(new GlobalGrpcExceptionFilter());
+  createGrpcServer(app, configService);
 
-  app.startAllMicroservices();
+  await app.startAllMicroservices();
 }
 bootstrap();
