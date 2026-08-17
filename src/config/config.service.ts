@@ -1,8 +1,8 @@
-import { Global, Injectable } from '@nestjs/common';
+import {  Injectable } from '@nestjs/common';
 import { ConfigService, Path, PathValue } from '@nestjs/config';
 import { AllConfigs } from './interfaces/all-configs.interface';
 
-@Global()
+// Custom config service to override basic methods (if needed)
 @Injectable()
 export class MyConfigService extends ConfigService<AllConfigs, true> {
 
