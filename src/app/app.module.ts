@@ -9,10 +9,12 @@ import { MyConfigModule } from '../config/config.module';
 // import { MyConfigService } from '../config/config.service';
 // import { TrackModule } from '../modules/track/track.module';
 // import { AlbumModule } from '../modules/album/album.module';
+import { DatabaseModule } from '../infrastrusture/db/db.module';
 
 @Module({
   imports: [
     MyConfigModule,
+    DatabaseModule,
     // ArtistModule,
     // TrackModule,
     // AlbumModule,

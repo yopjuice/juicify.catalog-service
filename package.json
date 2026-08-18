@@ -18,7 +18,6 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-
     "start:cluster": "tsx ./src/app/cluster/multicore.js",
     "start:threads": "tsx ./src/app/threads/producer.js",
     "start:pool": "tsx ./src/app/threads/pool.ts",
@@ -28,7 +27,6 @@
     "db:types": "pnpm exec dotenv -e .env -- pnpm exec pgtyped -c pgtyped.config.json",
     "test:unit": "node --import tsx --test src/**/*.unit.test.ts",
     "test:integration": "node --import tsx --test src/**/*.integration.test.ts"
-
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
@@ -43,6 +41,7 @@
     "@pgtyped/runtime": "^2.4.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "pg": "^8.23.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
