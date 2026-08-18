@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { MyConfigModule } from '../config/config.module';
 // import { ArtistModule } from '../modules/artist/artist.module';
 // import { ConfigModule } from '@nestjs/config';
 // import { grpcEnv } from '../config/env/grpc.env';
@@ -8,21 +9,13 @@ import { AppService } from './app.service';
 // import { MyConfigService } from '../config/config.service';
 // import { TrackModule } from '../modules/track/track.module';
 // import { AlbumModule } from '../modules/album/album.module';
-// import { PrismaModule } from '../infrastrusture/prisma/prisma.module';
 
 @Module({
   imports: [
-    //  ConfigModule.forRoot({ 
-    //   isGlobal: true,
-    //   load: [
-    //     grpcEnv,
-    //     databaseEnv,
-    //   ],
-    // }),
+    MyConfigModule,
     // ArtistModule,
     // TrackModule,
     // AlbumModule,
-    // PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService ],
