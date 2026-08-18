@@ -14,7 +14,7 @@ export class ArtistRepository {
 
   async findAll(): Promise<Artist[]> {
     try {
-      const sql = loadSql('user', 'user.findall.sql');
+      const sql = loadSql('artist', 'artist.findall.sql');
       const rows = await this.db.query<DbArtist>(sql);
       return rows.map(row => ArtistMapper.toDomain(row));
     } catch (error) {

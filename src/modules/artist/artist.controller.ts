@@ -14,7 +14,7 @@ export class ArtistController {
     console.log('Ping');
     return { ok: true }
   }
-  @GrpcMethod('ArtistService', 'FindAllArtists')
+  @GrpcMethod('ArtistService', 'GetAllArtists')
   findAll() {
     return this.artistService.findAll();
   }

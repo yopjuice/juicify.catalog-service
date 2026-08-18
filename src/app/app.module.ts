@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MyConfigModule } from '../config/config.module';
-// import { ArtistModule } from '../modules/artist/artist.module';
+import { ArtistModule } from '../modules/artist/artist.module';
 // import { ConfigModule } from '@nestjs/config';
 // import { grpcEnv } from '../config/env/grpc.env';
 // import { databaseEnv } from '../config/env/database.env';
@@ -15,7 +15,7 @@ import { DatabaseModule } from '../infrastrusture/db/db.module';
   imports: [
     MyConfigModule,
     DatabaseModule,
-    // ArtistModule,
+    ArtistModule,
     // TrackModule,
     // AlbumModule,
   ],

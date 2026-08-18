@@ -20,5 +20,7 @@ async function bootstrap() {
   createGrpcServer(app, configService);
 
   await app.startAllMicroservices();
+
+  await app.init();
 }
 bootstrap();
