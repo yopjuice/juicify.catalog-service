@@ -24,7 +24,7 @@
     "start:pool": "tsx ./src/app/threads/pool.ts",
     "init-db": "tsx ./src/scripts/init-db.ts",
     "db:diff": "PGPASSWORD='postgres' psqldef -U postgres -h localhost -p 5432 juicify  --dry-run < sql/schema.sql",
-    "db:apply": "PGPASSWORD='postgres' psqldef -U postgres -h localhost -p 5432 juicify  --dry-run < sql/schema.sql",
+    "db:apply": "PGPASSWORD='postgres' psqldef -U postgres -h localhost -p 5432 juicify  < sql/schema.sql",
     "test:unit": "node --import tsx --test src/**/*.unit.test.ts",
     "test:integration": "node --import tsx --test src/**/*.integration.test.ts"
 
