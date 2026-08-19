@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool, QueryResultRow, PoolClient } from 'pg';
 import { MyConfigService } from '../../config/config.service';
+import {QueryResult} from 'pg';
 
 // Interface for PgtypedQuery generated functions
 interface PgtypedQuery<TParams, TResult> {
@@ -118,4 +119,8 @@ export class DatabaseProvider implements OnApplicationShutdown {
     }
   }
 
+  public async queryOne<T = any>(text: string, params?: any[]): Promise<T | null> {
+    const res = await this.query<T>(text, params);
+    return res[0] || null;
+  }
 }

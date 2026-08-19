@@ -1,5 +1,5 @@
 import { GrpcOptions } from '@nestjs/microservices'
-import { PROTO_PATHS } from '@juice11/contracts';
+import { PROTO_PATHS } from '@juice11-micro/contracts';
 
 // Names of packages included
 export const grpcPackages = ['catalog.v1']

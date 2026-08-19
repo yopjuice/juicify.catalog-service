@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator"
+import { IsBoolean, IsOptional, IsString } from "class-validator"
 
 export class CreateArtistDto {
 	@IsString()
@@ -8,11 +8,11 @@ export class CreateArtistDto {
 	@IsOptional()
 	biography?: string
 
-	@IsString()
+  @IsBoolean()
 	@IsOptional()
 	isVerified?: boolean
 
 	@IsString()
 	@IsOptional()
-	avatar_url?: string
+	avatarUrl?: string
 }

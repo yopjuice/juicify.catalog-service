@@ -1,9 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UsePipes } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { PingResponse } from '@juice11/contracts';
+import { PingResponse } from '@juice11-micro/contracts';
+import { GrpcValidationPipe } from '../../infrastrusture/grpc/grpc.validation-pipe';
 
 @Controller()
 export class ArtistController {
@@ -14,30 +15,42 @@ export class ArtistController {
     console.log('Ping');
     return { ok: true }
   }
-  @GrpcMethod('ArtistService', 'GetAllArtists')
-  findAll() {
-    return this.artistService.findAll();
+  @GrpcMethod('ArtistService', 'ListArtists')
+  async findAll() {
+    const res = await this.artistService.findAll();
+    console.log(res);
+    return { artists: res }
   }
 
-  // @GrpcMethod('ArtistService', 'CreateArtist')
-  // create(@Payload() payload: { dto: CreateArtistDto }) {
-  //   return this.artistService.create(payload.dto);
-  // }
-  //
-  //
-  // @GrpcMethod('ArtistService', 'FindArtist')
-  // findOne(@Payload() payload: {id: string}) {
-  //   return this.artistService.findById(payload.id);
-  // }
-  //
-  // @GrpcMethod('ArtistService', 'UpdateArtist')
-  // update(@Payload() payload: { dto: UpdateArtistDto, id: string }) {
-  //   return this.artistService.update(payload.id, payload.dto);
-  // }
-  //
-  // @GrpcMethod('ArtistService', 'DeleteArtist')
-  // delete(@Payload() payload: {id: string}) {
-  //   return this.artistService.delete(payload.id);
-  // }
-  //
+  @GrpcMethod('ArtistService', 'CreateArtist')
+  // @UsePipes(new GrpcValidationPipe())
+  async create(@Payload() payload: CreateArtistDto) {
+    console.log({payload});
+    const res = await this.artistService.create(payload);
+    console.log(res);
+    return { artist: res };
+  }
+
+
+  @GrpcMethod('ArtistService', 'GetArtist')
+  async findOne(@Payload() payload: { id: string }) {
+    const res = await this.artistService.findById(payload.id);
+    console.log(res);
+    return { artist: res };
+  }
+
+  @GrpcMethod('ArtistService', 'UpdateArtist')
+  async update(@Payload() payload: { dto: UpdateArtistDto, id: string }) {
+    const res = await this.artistService.update(payload.id, payload.dto);
+    console.log(res);
+    return { artist: res };
+  }
+
+  @GrpcMethod('ArtistService', 'DeleteArtist')
+  async delete(@Payload() payload: { id: string }) {
+    const res = await this.artistService.delete(payload.id);
+    console.log(res);
+    return undefined;
+  }
+
 }
