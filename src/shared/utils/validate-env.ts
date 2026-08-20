@@ -4,7 +4,7 @@ import { validateSync } from 'class-validator';
 export function validateEnv<T extends object>(
     config: Record<string, unknown>,
     cls: ClassConstructor<T>,
-): void {
+): T {
     const validatedConfig = plainToInstance(cls, config, {
         enableImplicitConversion: true,
     });
@@ -19,4 +19,5 @@ export function validateEnv<T extends object>(
             .join('; ');
         throw new Error(`Environment validation failed: ${msg}`);
     }
+  return validatedConfig;
 }

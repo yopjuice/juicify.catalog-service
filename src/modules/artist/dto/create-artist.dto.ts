@@ -2,7 +2,7 @@ import { IsBoolean, IsOptional, IsString } from "class-validator"
 
 export class CreateArtistDto {
 	@IsString()
-	name: string
+	name!: string
 
 	@IsString()
 	@IsOptional()

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { buildUpdateQuery } from '../../shared/utils/sql-builder.js';
+import { RpcException } from "@nestjs/microservices";
+import { buildUpdateQuery } from '../../shared/utils/sql-update-builder.js';
 import { UpdateArtistDto } from '../../modules/artist/dto/update-artist.dto.js';
 import { Artist } from '../../modules/artist/artist.entity.js';
 import { ArtistMapper, DbArtist } from './artist.mapper.js';
@@ -16,14 +17,9 @@ export class ArtistRepository {
   ) { }
 
   async findAll(): Promise<Artist[]> {
-    try {
-      const sql = loadSql('artist', 'artist.findall.sql');
-      const rows = await this.db.query<DbArtist>(sql);
-      return rows.map(row => ArtistMapper.toDomain(row));
-    } catch (error) {
-      // this.logger.error('Failed to fetch all users', error);
-      throw new Error(`Failed to retrieve users: ${error.message}`);
-    }
+    const sql = loadSql('artist', 'artist.findall.sql');
+    const rows = await this.db.query<DbArtist>(sql);
+    return rows.map(row => ArtistMapper.toDomain(row));
   }
 
   async create(dto: CreateArtistDto): Promise<Artist> {
@@ -41,59 +37,56 @@ export class ArtistRepository {
       dto.avatarUrl || null,
       dto.isVerified || false,
     ];
-    try {
-
-      const row = await this.db.queryOne<DbArtist>(sql, values);
-      return ArtistMapper.toDomain(row);
-    } catch (error) {
-      throw new Error(`Failed to create artist: ${error.message}`);
-    }
+    const row = await this.db.queryOne<DbArtist>(sql, values) as DbArtist;
+    return ArtistMapper.toDomain(row);
   }
 
   async findById(id: string): Promise<Artist | null> {
     const query = `
       SELECT * FROM artists WHERE id = $1
     `;
-    try {
-      const result = await this.db.queryOne(query, [id]);
-      return result || null;
-    } catch (e) {
-      throw new Error(`Failed to find artist by id: ${e.message}`);
-    }
+    const result = await this.db.queryOne<DbArtist>(query, [id]);
+    if (!result) return null;
+    return ArtistMapper.toDomain(result);
   }
 
   // DELETE
   async delete(id: string): Promise<boolean> {
+    const existingArtist = await this.findById(id);
+
+    if (!existingArtist) {
+      throw new RpcException({
+        code: 5, // status.NOT_FOUND
+        message: `Artist with ID ${id} not found`
+      });
+    }
     const query = `
       DELETE FROM artists WHERE id = $1
     `;
 
-    try {
-      await this.db.query(query, [id]);
-      return true;
-    } catch (error) {
-      throw new Error(`Failed to delete artist: ${error.message}`);
-    }
+    await this.db.query(query, [id]);
+    return true;
   }
 
   // PARTIAL UPDATE
-  async update(id: string, dto: UpdateArtistDto): Promise<Artist | null> {
-    if (Object.keys(dto).length === 0) {
-      return this.findById(id);
-    }
+  async update(id: string, dto: UpdateArtistDto): Promise<Artist> {
 
+    const existingArtist = await this.findById(id);
+
+    if (!existingArtist) {
+      throw new RpcException({
+        code: 5, // status.NOT_FOUND
+        message: `Artist with ID ${id} not found`
+      });
+    }
     const { query, values } = buildUpdateQuery({
       table: 'artists',
       data: dto,
       where: { id },
     });
 
-    try {
-      const result = await this.db.query(query, values);
-      return result.length > 0 ? ArtistMapper.toDomain(result[0]) : null;
-    } catch (e) {
-      throw new Error(`Failed to update artist: ${e.message}`);
-    }
+    const result = await this.db.queryOne<DbArtist>(query, values) as DbArtist;
+    return ArtistMapper.toDomain(result);
 
   }
 }

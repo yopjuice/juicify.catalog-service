@@ -1,3 +1,5 @@
+import { caseTransformer } from "./case-transformer";
+
 interface UpdateParams {
   table: string;
   data: Record<string, any>;
@@ -12,7 +14,8 @@ export function buildUpdateQuery({ table, data, where }: UpdateParams): { query:
   // Building SET clause
   for (const [key, value] of Object.entries(data)) {
     if (value !== undefined) {
-      updates.push(`${key} = $${paramCount++}`);
+      const dbField = caseTransformer.camelToSnake(key);
+      updates.push(`${dbField} = $${paramCount++}`);
       values.push(value);
     }
   }
@@ -37,6 +40,8 @@ export function buildUpdateQuery({ table, data, where }: UpdateParams): { query:
     WHERE ${whereClauses.join(' AND ')}
     RETURNING *
   `;
+  console.log({data});
+  console.log({ query });
 
   return { query, values };
 }

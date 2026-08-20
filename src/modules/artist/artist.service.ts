@@ -1,3 +1,4 @@
+import { RpcException } from '@nestjs/microservices';
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -17,7 +18,9 @@ export class ArtistService {
 
 
   async findById(id: string): Promise<Artist> {
-    return this.artistRepository.findById(id)
+    const artist = await this.artistRepository.findById(id)
+    if (!artist) throw new RpcException({ code: 5, message: 'Artist not found' });
+    return artist;
   }
 
   async update(id: string, dto: UpdateArtistDto): Promise<Artist> {

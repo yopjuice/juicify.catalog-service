@@ -17,9 +17,9 @@ export class Artist {
 
   public get id(): string { return this.props.id; }
   public get name(): string { return this.props.name; }
-  public get biography(): string { return this.props.biography; }
+  public get biography(): string | undefined { return this.props.biography; }
   public get isVerified(): boolean { return this.props.isVerified; }
-  public get avatarUrl(): string { return this.props.avatarUrl; }
+  public get avatarUrl(): string | undefined { return this.props.avatarUrl; }
   public get createdAt(): Date { return this.props.createdAt }
   public get updatedAt(): Date { return this.props.updatedAt }
 

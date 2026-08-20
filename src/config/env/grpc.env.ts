@@ -5,9 +5,9 @@ import { GrpcValidator } from '../validators/grpc.validator'
 
 // Loader for grpc env
 export const grpcEnv = registerAs<GrpcConfig>('grpc', () => {
-	validateEnv(process.env, GrpcValidator)
+	const env = validateEnv(process.env, GrpcValidator)
 	return {
-		host: process.env.GRPC_HOST,
-		port: parseInt(process.env.GRPC_PORT!)
+    host: env.GRPC_HOST,
+		port: env.GRPC_PORT,
 	}
 })

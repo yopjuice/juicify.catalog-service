@@ -13,6 +13,6 @@ export const grpcLoader: NonNullable<GrpcOptions['options']['loader']> = {
 	keepCase: false,
 	longs: String,
 	enums: String,
-	defaults: true,
-	oneofs: true
+	defaults: false,
+	oneofs: false,
 }

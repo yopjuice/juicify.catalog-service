@@ -2,7 +2,7 @@ import { Controller, UsePipes } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { UpdateArtistDto, UpdateArtistPayloadDto } from './dto/update-artist.dto';
 import { PingResponse } from '@juice11-micro/contracts';
 import { GrpcValidationPipe } from '../../infrastrusture/grpc/grpc.validation-pipe';
 
@@ -40,8 +40,10 @@ export class ArtistController {
   }
 
   @GrpcMethod('ArtistService', 'UpdateArtist')
-  async update(@Payload() payload: { dto: UpdateArtistDto, id: string }) {
-    const res = await this.artistService.update(payload.id, payload.dto);
+  async update(@Payload() payload: UpdateArtistPayloadDto) {
+    console.log({payload})
+    const {id, ...dto} = payload;
+    const res = await this.artistService.update(id, dto);
     console.log(res);
     return { artist: res };
   }
