@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { RpcException } from "@nestjs/microservices";
-import { buildUpdateQuery } from '../../shared/utils/sql-update-builder.js';
-import { UpdateArtistDto } from '../../modules/artist/dto/update-artist.dto.js';
+import { buildUpdateQuery } from '../../shared/utils/sql-update-builder';
+import { UpdateArtistDto } from '../../modules/artist/dto/update-artist.dto';
 import { Artist } from '../../modules/artist/artist.entity.js';
 import { ArtistMapper, DbArtist } from './artist.mapper.js';
 import { loadSql } from '../../shared/utils/load-sql.js';

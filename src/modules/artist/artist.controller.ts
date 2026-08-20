@@ -25,9 +25,7 @@ export class ArtistController {
   @GrpcMethod('ArtistService', 'CreateArtist')
   // @UsePipes(new GrpcValidationPipe())
   async create(@Payload() payload: CreateArtistDto) {
-    console.log({payload});
     const res = await this.artistService.create(payload);
-    console.log(res);
     return { artist: res };
   }
 
