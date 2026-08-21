@@ -2,12 +2,12 @@ import { RpcException } from '@nestjs/microservices';
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { ArtistRepository } from '../../infrastrusture/artist/artist.repo';
+import { ArtistRepo } from '../../infrastrusture/artist/artist.repo';
 import { Artist } from './artist.entity';
 
 @Injectable()
 export class ArtistService {
-  constructor(private readonly artistRepository: ArtistRepository) { }
+  constructor(private readonly artistRepository: ArtistRepo) { }
 
   async findAll(): Promise<Artist[]> {
     return this.artistRepository.findAll();

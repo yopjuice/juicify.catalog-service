@@ -9,7 +9,7 @@ import { DatabaseProvider } from '../db/db.provider';
 import { CreateArtistDto } from "../../modules/artist/dto/create-artist.dto.js";
 
 @Injectable()
-export class ArtistRepository {
+export class ArtistRepo {
 
   constructor(
     private readonly db: DatabaseProvider,
@@ -23,7 +23,6 @@ export class ArtistRepository {
   }
 
   async create(dto: CreateArtistDto): Promise<Artist> {
-    console.log(dto);
     const sql = `
       INSERT INTO artists (
         name, biography, avatar_url, is_verified, created_at, updated_at

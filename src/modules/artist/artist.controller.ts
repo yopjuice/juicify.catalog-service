@@ -39,7 +39,6 @@ export class ArtistController {
 
   @GrpcMethod('ArtistService', 'UpdateArtist')
   async update(@Payload() payload: UpdateArtistPayloadDto) {
-    console.log({payload})
     const {id, ...dto} = payload;
     const res = await this.artistService.update(id, dto);
     console.log(res);
