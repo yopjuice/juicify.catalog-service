@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-// import { createGrpcServer } from './infrastrusture/grpc/grpc.server';
 import { MyConfigService } from './config/config.service';
+import { GrpcValidationPipe } from './infrastrusture/grpc/grpc.validation-pipe';
+import { GlobalGrpcExceptionFilter } from './infrastrusture/grpc/grpc.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +12,10 @@ async function bootstrap() {
   const url = configService.get('grpc.host');
   console.log(`Got localhost from env: ${url}`);
 
-  // createGrpcServer(app, configService);
+  // performs dto validation
+  app.useGlobalPipes(new GrpcValidationPipe());
+  // Map domain errors to gRPC
+  app.useGlobalFilters(new GlobalGrpcExceptionFilter());
 
   app.startAllMicroservices();
 }
