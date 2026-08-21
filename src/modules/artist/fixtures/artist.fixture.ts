@@ -1,4 +1,5 @@
 import { ArtistMapper, DbArtist } from '../../../infrastrusture/artist/artist.mapper';
+import {ArtistProps} from '../artist.entity';
 import { UpdateArtistDto } from "../dto/update-artist.dto";
 import { Artist } from '../artist.entity';
 import { CreateArtistDto } from '../dto/create-artist.dto';
@@ -51,5 +52,17 @@ export const ArtistFixtures = {
       ...baseDbArtist,
       id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`
     })),
+
+
+  props: (overrides?: Partial<ArtistProps>): ArtistProps => ({
+    id: 'uuid-123',
+    name: 'John Doe',
+    biography: 'A great musician',
+    isVerified: false,
+    avatarUrl: 'https://example.com',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    ...overrides,
+  }),
 };
 

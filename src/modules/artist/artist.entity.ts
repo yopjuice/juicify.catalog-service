@@ -25,7 +25,13 @@ export class Artist {
 
 
   public changeName(newName: string): void {
+    if (newName.length < 3) throw new Error('Name must be at least 3 characters long');
     this.props.name = newName;
+  }
+
+  public verify(): void {
+    if (this.props.isVerified) return;
+    this.props.isVerified = true;
   }
 }
 
