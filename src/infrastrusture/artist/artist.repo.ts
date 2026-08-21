@@ -63,7 +63,7 @@ export class ArtistRepo {
       DELETE FROM artists WHERE id = $1
     `;
 
-    await this.db.query(query, [id]);
+    await this.db.queryOne(query, [id]);
     return true;
   }
 

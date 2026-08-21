@@ -40,5 +40,16 @@ export const ArtistFixtures = {
       ...baseDbArtist,
       id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`
     })),
+
+  raw: (override?: Partial<DbArtist>): DbArtist => ({
+    ...baseDbArtist,
+    ...override,
+  }),
+
+  rawArray: (count = 2): DbArtist[] =>
+    Array.from({ length: count }, (_, i) => ArtistFixtures.raw({
+      ...baseDbArtist,
+      id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`
+    })),
 };
 
