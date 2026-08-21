@@ -2,7 +2,6 @@ import { Artist, ArtistProps } from './artist.entity';
 import { ArtistFixtures } from './fixtures/artist.fixture';
 
 describe('Artist Entity', () => {
-
   describe('Creation & Getters', () => {
     it('should correctly initialize and return properties via getters', () => {
       const props = ArtistFixtures.props();
@@ -30,8 +29,10 @@ describe('Artist Entity', () => {
     it('should throw an error if the new name is less than 3 characters long', () => {
       const artist = new Artist(ArtistFixtures.props({ name: 'Valid Name' }));
 
-      expect(() => artist.changeName('Jo')).toThrow('Name must be at least 3 characters long');
-      
+      expect(() => artist.changeName('Jo')).toThrow(
+        'Name must be at least 3 characters long',
+      );
+
       expect(artist.name).toBe('Valid Name');
     });
   });

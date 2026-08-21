@@ -1,6 +1,6 @@
-import { Artist as DomainArtist } from '../../modules/artist/artist.entity.js';
+import { Artist as DomainArtist } from '../../modules/artist/artist.entity';
 
-// Database object
+// Database object interface
 export interface DbArtist {
   id: string;
   name: string;
@@ -14,7 +14,6 @@ export interface DbArtist {
 export class ArtistMapper {
   // From Database to Domain
   public static toDomain(raw: DbArtist): DomainArtist {
-
     return new DomainArtist({
       id: raw.id,
       name: raw.name,

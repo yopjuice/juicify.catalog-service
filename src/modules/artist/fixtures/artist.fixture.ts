@@ -1,26 +1,30 @@
-import { ArtistMapper, DbArtist } from '../../../infrastrusture/artist/artist.mapper';
-import {ArtistProps} from '../artist.entity';
-import { UpdateArtistDto } from "../dto/update-artist.dto";
+import {
+  ArtistMapper,
+  DbArtist,
+} from '../../../infrastrusture/artist/artist.mapper';
+import { ArtistProps } from '../artist.entity';
+import { UpdateArtistDto } from '../dto/update-artist.dto';
 import { Artist } from '../artist.entity';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 
-// Default base object 
+// Default database object
 const baseDbArtist = {
-  id: "5176cfd5-954f-46a1-bdb5-b4006a24ffcd",
-  name: "juice11",
+  id: '5176cfd5-954f-46a1-bdb5-b4006a24ffcd',
+  name: 'juice11',
   is_verified: false,
   biography: 'The greatest artist of all time',
   avatar_url: 'https://i.imgur.com/wSTFkRM.png',
-  created_at: new Date("1970-01-01T00:00:00.000Z"),
-  updated_at: new Date("1970-01-01T00:00:00.000Z"),
+  created_at: new Date('1970-01-01T00:00:00.000Z'),
+  updated_at: new Date('1970-01-01T00:00:00.000Z'),
 } as const;
 
 export const ArtistFixtures = {
   // Generates an Artist entity
-  entity: (overrides?: Partial<DbArtist>): Artist => ArtistMapper.toDomain({
-    ...baseDbArtist,
-    ...overrides,
-  }),
+  entity: (overrides?: Partial<DbArtist>): Artist =>
+    ArtistMapper.toDomain({
+      ...baseDbArtist,
+      ...overrides,
+    }),
 
   // Generates an incoming gRPC DTO payload
   createDto: (overrides?: Partial<CreateArtistDto>): CreateArtistDto => ({
@@ -31,29 +35,36 @@ export const ArtistFixtures = {
     ...overrides,
   }),
 
+  // Generates an incoming gRPC DTO payload
   updateDto: (overrides?: Partial<UpdateArtistDto>): UpdateArtistDto => ({
     biography: 'updated biography',
     ...overrides,
   }),
-  // Generates arrays for bulk CRUD operations
+  // Generates arrays of Artist entities for bulk CRUD operations
   array: (count = 2): Artist[] =>
-    Array.from({ length: count }, (_, i) => ArtistMapper.toDomain({
-      ...baseDbArtist,
-      id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`
-    })),
+    Array.from({ length: count }, (_, i) =>
+      ArtistMapper.toDomain({
+        ...baseDbArtist,
+        id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`,
+      }),
+    ),
 
+  // Generates a raw database object
   raw: (override?: Partial<DbArtist>): DbArtist => ({
     ...baseDbArtist,
     ...override,
   }),
 
+  // Generates an array of raw database objects
   rawArray: (count = 2): DbArtist[] =>
-    Array.from({ length: count }, (_, i) => ArtistFixtures.raw({
-      ...baseDbArtist,
-      id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`
-    })),
+    Array.from({ length: count }, (_, i) =>
+      ArtistFixtures.raw({
+        ...baseDbArtist,
+        id: `5176cfd5-954f-46a1-bdb5-b4006a24ffc${i}`,
+      }),
+    ),
 
-
+  // Generates Artist entity props
   props: (overrides?: Partial<ArtistProps>): ArtistProps => ({
     id: 'uuid-123',
     name: 'John Doe',
@@ -65,4 +76,3 @@ export const ArtistFixtures = {
     ...overrides,
   }),
 };
-

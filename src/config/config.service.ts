@@ -1,4 +1,4 @@
-import {  Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService, Path, PathValue } from '@nestjs/config';
 import { AllConfigs } from './interfaces/all-configs.interface';
 
@@ -6,7 +6,7 @@ import { AllConfigs } from './interfaces/all-configs.interface';
 @Injectable()
 export class MyConfigService extends ConfigService<AllConfigs, true> {
   /**
-   * Overrides the get method to ensure strict type inference 
+   * Overrides the get method to ensure strict type inference
    * based on the specific property path provided.
    */
   override get<P extends Path<AllConfigs>>(

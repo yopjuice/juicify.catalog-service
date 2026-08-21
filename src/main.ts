@@ -6,19 +6,19 @@ import {createGrpcServer} from './infrastrusture/grpc/grpc.server';
 import { MyConfigModule } from './config/config.module';
 
 async function bootstrap() {
-const configContext = await NestFactory.createApplicationContext(MyConfigModule);
+  // Resolves MyConfigModule ONLY
+  const configContext =
+    await NestFactory.createApplicationContext(MyConfigModule);
   const configService = configContext.get(MyConfigService);
 
-  const url = configService.get('grpc.host');
-  console.log(`Got localhost from env: ${url}`);
-
+  // Inits app as grpc microservice
   const app = await createGrpcServer(configService);
   // performs dto validation
   app.useGlobalPipes(new GrpcValidationPipe());
   // Map domain errors to gRPC
   app.useGlobalFilters(new GlobalGrpcExceptionFilter());
 
-
+  // performs dto validation
   app.useGlobalPipes(new GrpcValidationPipe());
 
   await configContext.close();

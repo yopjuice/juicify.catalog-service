@@ -3,9 +3,8 @@ import { Artist } from '../../modules/artist/artist.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistRepo } from './artist.repo';
 import { ArtistFixtures } from '../../modules/artist/fixtures/artist.fixture';
-import { DatabaseProvider } from '../../infrastrusture/db/db.provider'
-import { createDatabaseProviderMock } from '../../modules/artist/mocks/db.mock'
-
+import { DatabaseProvider } from '../../infrastrusture/db/db.provider';
+import { createDatabaseProviderMock } from '../../modules/artist/mocks/db.mock';
 
 describe('ArtistRepo', () => {
   let repo: ArtistRepo;
@@ -18,12 +17,12 @@ describe('ArtistRepo', () => {
         {
           provide: DatabaseProvider,
           useValue: createDatabaseProviderMock(),
-        }],
+        },
+      ],
     }).compile();
 
     repo = module.get<ArtistRepo>(ArtistRepo);
     dbConfig = module.get<DatabaseProvider>(DatabaseProvider);
-
 
     jest.clearAllMocks();
   });
@@ -48,7 +47,9 @@ describe('ArtistRepo', () => {
   describe('findAll', () => {
     it('should return a list of artists', async () => {
       const expected = ArtistFixtures.array();
-      jest.spyOn(dbConfig, 'query').mockResolvedValue(ArtistFixtures.rawArray());
+      jest
+        .spyOn(dbConfig, 'query')
+        .mockResolvedValue(ArtistFixtures.rawArray());
 
       const result = await repo.findAll();
 
@@ -93,7 +94,7 @@ describe('ArtistRepo', () => {
   describe('update', () => {
     it('should return the updated artist', async () => {
       const dto = ArtistFixtures.updateDto();
-      const expected = ArtistFixtures.entity()
+      const expected = ArtistFixtures.entity();
       jest.spyOn(dbConfig, 'queryOne').mockResolvedValue(ArtistFixtures.raw());
 
       const result = await repo.update(expected.id, dto);
@@ -104,7 +105,9 @@ describe('ArtistRepo', () => {
 
     it('should throw an error if the artist is not found', async () => {
       const dto = ArtistFixtures.updateDto();
-      jest.spyOn(dbConfig, 'queryOne').mockRejectedValue(new RpcException('Artist not found'))
+      jest
+        .spyOn(dbConfig, 'queryOne')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = repo.update('non-existent-id', dto);
 
@@ -115,7 +118,7 @@ describe('ArtistRepo', () => {
 
   describe('delete', () => {
     it('should return true on success', async () => {
-      const expected = ArtistFixtures.entity()
+      const expected = ArtistFixtures.entity();
       jest.spyOn(dbConfig, 'queryOne').mockResolvedValue(ArtistFixtures.raw());
 
       const result = await repo.delete(expected.id);
@@ -125,7 +128,9 @@ describe('ArtistRepo', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest.spyOn(dbConfig, 'queryOne').mockRejectedValue(new RpcException('Artist not found'))
+      jest
+        .spyOn(dbConfig, 'queryOne')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = repo.delete('non-existent-id');
 
@@ -133,6 +138,4 @@ describe('ArtistRepo', () => {
       expect(dbConfig.queryOne).toHaveBeenCalled();
     });
   });
-
 });
-;

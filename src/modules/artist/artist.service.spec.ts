@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistService } from './artist.service';
 import { ArtistRepo } from '../../infrastrusture/artist/artist.repo';
 import { ArtistFixtures } from './fixtures/artist.fixture';
-import {createArtistRepoMock} from './mocks/artist.mock'
+import { createArtistRepoMock } from './mocks/artist.mock';
 
 describe('ArtistService', () => {
   let service: ArtistService;
@@ -15,14 +15,14 @@ describe('ArtistService', () => {
       providers: [
         ArtistService,
         {
-        provide: ArtistRepo,
-        useValue: createArtistRepoMock(),
-      }],
+          provide: ArtistRepo,
+          useValue: createArtistRepoMock(),
+        },
+      ],
     }).compile();
 
     service = module.get<ArtistService>(ArtistService);
     repo = module.get<ArtistRepo>(ArtistRepo);
-
 
     jest.clearAllMocks();
   });
@@ -79,7 +79,9 @@ describe('ArtistService', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest.spyOn(repo, 'findById').mockRejectedValue(new RpcException('Artist not found'));
+      jest
+        .spyOn(repo, 'findById')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = service.findById('non-existent-id');
 
@@ -94,7 +96,7 @@ describe('ArtistService', () => {
       const expected = ArtistFixtures.entity();
       jest.spyOn(repo, 'update').mockResolvedValue(expected);
 
-      const result = await service.update(expected.id, dto );
+      const result = await service.update(expected.id, dto);
 
       expect(repo.update).toHaveBeenCalledWith(expected.id, dto);
       expect(result).toEqual(expected);
@@ -102,7 +104,9 @@ describe('ArtistService', () => {
 
     it('should throw an error if the artist is not found', async () => {
       const dto = ArtistFixtures.updateDto();
-      jest.spyOn(repo, 'update').mockRejectedValue(new RpcException('Artist not found'));
+      jest
+        .spyOn(repo, 'update')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = service.update('non-existent-id', dto);
 
@@ -123,7 +127,9 @@ describe('ArtistService', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest.spyOn(repo, 'delete').mockRejectedValue(new RpcException('Artist not found'));
+      jest
+        .spyOn(repo, 'delete')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = service.delete('non-existent-id');
 
@@ -131,6 +137,4 @@ describe('ArtistService', () => {
       expect(repo.delete).toHaveBeenCalledWith('non-existent-id');
     });
   });
-
 });
-;

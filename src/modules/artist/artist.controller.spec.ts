@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistController } from './artist.controller';
 import { ArtistService } from './artist.service';
 import { ArtistFixtures } from './fixtures/artist.fixture';
-import { createArtistServiceMock } from './mocks/artist.mock'
+import { createArtistServiceMock } from './mocks/artist.mock';
 
 describe('ArtistController', () => {
   let controller: ArtistController;
@@ -13,15 +13,16 @@ describe('ArtistController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ArtistController],
-      providers: [{
-        provide: ArtistService,
-        useValue: createArtistServiceMock(),
-      }],
+      providers: [
+        {
+          provide: ArtistService,
+          useValue: createArtistServiceMock(),
+        },
+      ],
     }).compile();
 
     controller = module.get<ArtistController>(ArtistController);
     service = module.get<ArtistService>(ArtistService);
-
 
     jest.clearAllMocks();
   });
@@ -82,7 +83,9 @@ describe('ArtistController', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest.spyOn(service, 'findById').mockRejectedValue(new RpcException('Artist not found'));
+      jest
+        .spyOn(service, 'findById')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = controller.findOne({ id: 'non-existent-id' });
 
@@ -105,7 +108,9 @@ describe('ArtistController', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest.spyOn(service, 'update').mockRejectedValue(new RpcException('Artist not found'));
+      jest
+        .spyOn(service, 'update')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = controller.update({ id: 'non-existent-id' });
 
@@ -126,7 +131,9 @@ describe('ArtistController', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest.spyOn(service, 'delete').mockRejectedValue(new RpcException('Artist not found'));
+      jest
+        .spyOn(service, 'delete')
+        .mockRejectedValue(new RpcException('Artist not found'));
 
       const result = controller.delete({ id: 'non-existent-id' });
 
@@ -134,5 +141,4 @@ describe('ArtistController', () => {
       expect(service.delete).toHaveBeenCalledWith('non-existent-id');
     });
   });
-
 });

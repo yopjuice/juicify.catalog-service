@@ -1,7 +1,6 @@
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool, QueryResultRow, PoolClient } from 'pg';
 import { MyConfigService } from '../../config/config.service';
-import {QueryResult} from 'pg';
 
 // Interface for PgtypedQuery generated functions
 interface PgtypedQuery<TParams, TResult> {
@@ -13,9 +12,7 @@ interface PgtypedQuery<TParams, TResult> {
 export class DatabaseProvider implements OnApplicationShutdown {
   private readonly pool: Pool;
 
-  constructor(
-    private readonly config: MyConfigService,
-  ) {
+  constructor(private readonly config: MyConfigService) {
     this.pool = new Pool({
       host: this.config.get('database.host'),
       port: this.config.get('database.port'),

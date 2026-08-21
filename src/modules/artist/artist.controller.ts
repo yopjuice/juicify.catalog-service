@@ -1,34 +1,33 @@
-import { Controller, UsePipes } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto, UpdateArtistPayloadDto } from './dto/update-artist.dto';
-import { PingResponse } from '@juice11-micro/contracts';
-import { GrpcValidationPipe } from '../../infrastrusture/grpc/grpc.validation-pipe';
+import { UpdateArtistPayloadDto } from './dto/update-artist.dto';
+import type { PingResponse } from '@juice11-micro/contracts';
 
 @Controller()
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) { }
+  constructor(private readonly artistService: ArtistService) {}
 
+  // Simple ping handler for testing
+  // TODO:move this elsewhere or remove
   @GrpcMethod('CatalogService', 'Ping')
-  async ping(): Promise<PingResponse> {
+  ping(): PingResponse {
     console.log('Ping');
-    return { ok: true }
+    return { ok: true };
   }
   @GrpcMethod('ArtistService', 'ListArtists')
   async findAll() {
     const res = await this.artistService.findAll();
     console.log(res);
-    return { artists: res }
+    return { artists: res };
   }
 
   @GrpcMethod('ArtistService', 'CreateArtist')
-  // @UsePipes(new GrpcValidationPipe())
   async create(@Payload() payload: CreateArtistDto) {
     const res = await this.artistService.create(payload);
     return { artist: res };
   }
-
 
   @GrpcMethod('ArtistService', 'GetArtist')
   async findOne(@Payload() payload: { id: string }) {
@@ -39,7 +38,7 @@ export class ArtistController {
 
   @GrpcMethod('ArtistService', 'UpdateArtist')
   async update(@Payload() payload: UpdateArtistPayloadDto) {
-    const {id, ...dto} = payload;
+    const { id, ...dto } = payload;
     const res = await this.artistService.update(id, dto);
     console.log(res);
     return { artist: res };
@@ -51,5 +50,4 @@ export class ArtistController {
     console.log(res);
     return undefined;
   }
-
 }

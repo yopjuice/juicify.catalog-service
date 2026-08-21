@@ -1,25 +1,24 @@
-import { Injectable } from "@nestjs/common";
-import { RpcException } from "@nestjs/microservices";
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { buildUpdateQuery } from '../../shared/utils/sql-update-builder';
 import { UpdateArtistDto } from '../../modules/artist/dto/update-artist.dto';
-import { Artist } from '../../modules/artist/artist.entity.js';
-import { ArtistMapper, DbArtist } from './artist.mapper.js';
-import { loadSql } from '../../shared/utils/load-sql.js';
+import { Artist } from '../../modules/artist/artist.entity';
+import { ArtistMapper, DbArtist } from './artist.mapper';
+import { loadSql } from '../../shared/utils/load-sql';
 import { DatabaseProvider } from '../db/db.provider';
-import { CreateArtistDto } from "../../modules/artist/dto/create-artist.dto.js";
+import { CreateArtistDto } from '../../modules/artist/dto/create-artist.dto';
 
 @Injectable()
 export class ArtistRepo {
-
   constructor(
     private readonly db: DatabaseProvider,
     // private readonly logger: any,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Artist[]> {
     const sql = loadSql('artist', 'artist.findall.sql');
     const rows = await this.db.query<DbArtist>(sql);
-    return rows.map(row => ArtistMapper.toDomain(row));
+    return rows.map((row) => ArtistMapper.toDomain(row));
   }
 
   async create(dto: CreateArtistDto): Promise<Artist> {
@@ -36,7 +35,7 @@ export class ArtistRepo {
       dto.avatarUrl || null,
       dto.isVerified || false,
     ];
-    const row = await this.db.queryOne<DbArtist>(sql, values) as DbArtist;
+    const row = (await this.db.queryOne<DbArtist>(sql, values)) as DbArtist;
     return ArtistMapper.toDomain(row);
   }
 
@@ -56,7 +55,7 @@ export class ArtistRepo {
     if (!existingArtist) {
       throw new RpcException({
         code: 5, // status.NOT_FOUND
-        message: `Artist with ID ${id} not found`
+        message: `Artist with ID ${id} not found`,
       });
     }
     const query = `
@@ -69,13 +68,12 @@ export class ArtistRepo {
 
   // PARTIAL UPDATE
   async update(id: string, dto: UpdateArtistDto): Promise<Artist> {
-
     const existingArtist = await this.findById(id);
 
     if (!existingArtist) {
       throw new RpcException({
         code: 5, // status.NOT_FOUND
-        message: `Artist with ID ${id} not found`
+        message: `Artist with ID ${id} not found`,
       });
     }
     const { query, values } = buildUpdateQuery({
@@ -84,8 +82,10 @@ export class ArtistRepo {
       where: { id },
     });
 
-    const result = await this.db.queryOne<DbArtist>(query, values) as DbArtist;
+    const result = (await this.db.queryOne<DbArtist>(
+      query,
+      values,
+    )) as DbArtist;
     return ArtistMapper.toDomain(result);
-
   }
 }

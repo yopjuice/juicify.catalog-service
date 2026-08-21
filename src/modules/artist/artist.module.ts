@@ -5,6 +5,6 @@ import { ArtistRepo } from '../../infrastrusture/artist/artist.repo';
 
 @Module({
   controllers: [ArtistController],
-  providers: [ArtistService,  ArtistRepo],
+  providers: [ArtistService, ArtistRepo],
 })
 export class ArtistModule {}

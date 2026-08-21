@@ -20,6 +20,6 @@ import { DatabaseModule } from '../infrastrusture/db/db.module';
     // AlbumModule,
   ],
   controllers: [AppController],
-  providers: [AppService ],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

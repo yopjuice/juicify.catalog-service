@@ -32,4 +32,15 @@ export default tseslint.config(
       "prettier/prettier": ["error", { endOfLine: "auto" }],
     },
   },
+ {
+    files: ['**/*.spec.ts', '**/*.test.ts'],
+    rules: {
+      // disable this context checks fro mocks in tests
+      '@typescript-eslint/unbound-method': 'off',
+      // disable for test checks
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+    },
+  },
 );

@@ -1,4 +1,4 @@
-import { caseTransformer } from "./case-transformer";
+import { caseTransformer } from './case-transformer';
 
 interface UpdateParams {
   table: string;
@@ -6,7 +6,11 @@ interface UpdateParams {
   where: Record<string, any>;
 }
 
-export function buildUpdateQuery({ table, data, where }: UpdateParams): { query: string; values: any[] } {
+// Funciton for writing custom sql queries depending on the data and where clauses
+export function buildUpdateQuery({ table, data, where }: UpdateParams): {
+  query: string;
+  values: any[];
+} {
   const updates: string[] = [];
   const values: any[] = [];
   let paramCount = 1;
@@ -34,14 +38,14 @@ export function buildUpdateQuery({ table, data, where }: UpdateParams): { query:
     values.push(value);
   }
 
+  // Putting it all together
   const query = `
     UPDATE ${table}
     SET ${updates.join(', ')}
     WHERE ${whereClauses.join(' AND ')}
     RETURNING *
   `;
-  console.log({data});
-  console.log({ query });
+  console.log({ data, where, query });
 
   return { query, values };
 }
