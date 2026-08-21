@@ -13,7 +13,7 @@ export class GlobalGrpcExceptionFilter implements RpcExceptionFilter {
 
     // Define error type
     const errorType = this.resolveErrorType(exception);
-    console.log({ exception, errorType })
+    console.log({ code: exception.code, message: exception.message, errorType })
 
     switch (errorType) {
       case 'domain': {

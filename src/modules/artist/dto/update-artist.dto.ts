@@ -6,5 +6,5 @@ export class UpdateArtistDto extends PartialType(CreateArtistDto) {}
 
 export class UpdateArtistPayloadDto extends UpdateArtistDto {
   @IsUUID()
-  id!: string;
+  id: string;
 }

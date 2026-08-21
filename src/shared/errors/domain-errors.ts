@@ -21,13 +21,15 @@ export abstract class DomainError extends Error {
 
 export class EntityNotFoundError extends DomainError {
   constructor(entityName: string) {
-    super(`${entityName} was not found`);
+    const capitalized = entityName.charAt(0).toUpperCase() + entityName.slice(1);
+    super(`${capitalized} not found`);
   }
 }
 
 export class EntityAlreadyExistsError extends DomainError {
-  constructor(entityName: string, field: string, value: any) {
-    super(`${entityName} with field ${field}='${value}' already exists`);
+  constructor(entityName: string) {
+    const capitalized = entityName.charAt(0).toUpperCase() + entityName.slice(1);
+    super(`${capitalized} already exists`);
   }
 }
 

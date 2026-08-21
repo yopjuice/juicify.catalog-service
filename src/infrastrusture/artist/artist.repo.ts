@@ -7,6 +7,7 @@ import { ArtistMapper, DbArtist } from './artist.mapper';
 import { loadSql } from '../../shared/utils/load-sql';
 import { DatabaseProvider } from '../db/db.provider';
 import { CreateArtistDto } from '../../modules/artist/dto/create-artist.dto';
+import { EntityNotFoundError } from '../../shared/errors/domain-errors';
 
 @Injectable()
 export class ArtistRepo {
@@ -53,10 +54,7 @@ export class ArtistRepo {
     const existingArtist = await this.findById(id);
 
     if (!existingArtist) {
-      throw new RpcException({
-        code: 5, // status.NOT_FOUND
-        message: `Artist with ID ${id} not found`,
-      });
+      throw new EntityNotFoundError('artist');
     }
     const query = `
       DELETE FROM artists WHERE id = $1
@@ -71,10 +69,7 @@ export class ArtistRepo {
     const existingArtist = await this.findById(id);
 
     if (!existingArtist) {
-      throw new RpcException({
-        code: 5, // status.NOT_FOUND
-        message: `Artist with ID ${id} not found`,
-      });
+      throw new EntityNotFoundError('artist');
     }
     const { query, values } = buildUpdateQuery({
       table: 'artists',

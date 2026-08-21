@@ -4,6 +4,8 @@ import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistPayloadDto } from './dto/update-artist.dto';
 import type { PingResponse } from '@juice11-micro/contracts';
+import { DeleteArtistDto } from './dto/delete-artist.dto';
+import { GetArtistDto } from './dto/get-artist.dto';
 
 @Controller()
 export class ArtistController {
@@ -30,7 +32,7 @@ export class ArtistController {
   }
 
   @GrpcMethod('ArtistService', 'GetArtist')
-  async findOne(@Payload() payload: { id: string }) {
+  async findOne(@Payload() payload: GetArtistDto) {
     const res = await this.artistService.findById(payload.id);
     console.log(res);
     return { artist: res };
@@ -45,7 +47,7 @@ export class ArtistController {
   }
 
   @GrpcMethod('ArtistService', 'DeleteArtist')
-  async delete(@Payload() payload: { id: string }) {
+  async delete(@Payload() payload: DeleteArtistDto) {
     const res = await this.artistService.delete(payload.id);
     console.log(res);
     return undefined;

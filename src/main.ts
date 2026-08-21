@@ -18,9 +18,6 @@ async function bootstrap() {
   // Map domain errors to gRPC
   app.useGlobalFilters(new GlobalGrpcExceptionFilter());
 
-  // performs dto validation
-  app.useGlobalPipes(new GrpcValidationPipe());
-
   await configContext.close();
 
   await app.listen();

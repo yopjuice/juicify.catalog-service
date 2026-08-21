@@ -19,6 +19,8 @@ const baseDbArtist = {
 } as const;
 
 export const ArtistFixtures = {
+  // Get valid UUID
+  uuid: (): string => baseDbArtist.id,
   // Generates an Artist entity
   entity: (overrides?: Partial<DbArtist>): Artist =>
     ArtistMapper.toDomain({
