@@ -1,0 +1,38 @@
+[sqlfluff]
+# Указываем диалект PostgreSQL
+dialect = postgres
+
+# Набор правил (all — проверять всё, кроме исключений ниже)
+rules = all
+
+# Исключаем специфичные правила, которые часто мешают в повседневной разработке:
+# AL03: Требует обязательное использование 'AS' для алиасов таблиц (многим не нравится)
+# AM04: Запрещает использование префиксов типа 'tbl_' или 'vw_'
+# LT05: Строгий контроль за пробелами перед запятыми (может конфликтовать с автоформатом)
+exclude_rules = AL03, AM04, LT05
+
+# Максимальная длина строки (после нее линтер попросит перенос)
+max_line_length = 120
+
+[sqlfluff:indentation]
+# Настройки отступов
+indent_unit = space
+tab_space_size = 4
+indented_joins = False
+indented_using_on = True
+
+[sqlfluff:rules:capitalisation.keywords]
+# Принудительно приводим все SQL-ключевые слова к ВЕРХНЕМУ регистру (SELECT, FROM и т.д.)
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.identifiers]
+# Названия таблиц и колонок в PostgreSQL обычно пишутся в нижнем регистре (snake_case)
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+# Названия функций (COUNT, MAX, NOW) приводим к ВЕРХНЕМУ регистру
+capitalisation_policy = upper
+
+[sqlfluff:rules:aliasing.length]
+# Разрешаем короткие алиасы для таблиц (например, "FROM users u")
+min_alias_length = 1

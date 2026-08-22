@@ -116,4 +116,8 @@ export class DatabaseProvider implements OnApplicationShutdown {
     }
   }
 
+  public async queryOne<T = any>(text: string, params?: any[]): Promise<T | null> {
+    const res = await this.query<T>(text, params);
+    return res[0] || null;
+  }
 }

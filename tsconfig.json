@@ -24,6 +24,7 @@
       "@prisma/generated": ["./prisma/generated"]
     },
     "types": ["jest"],
-    "strict": false
+    "strict": true,
+    "strictPropertyInitialization": false
   }
 }
