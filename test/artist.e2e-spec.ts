@@ -6,7 +6,10 @@ import { Transport, ClientGrpcProxy } from '@nestjs/microservices';
 import { AppModule } from '../src/app/app.module';
 import { lastValueFrom } from 'rxjs';
 import { ArtistServiceClient } from '@juice11-micro/contracts';
-import { grpcPackages, grpcProtoPaths } from '../src/infrastrusture/grpc/gprc.options';
+import {
+  grpcPackages,
+  grpcProtoPaths,
+} from '../src/infrastrusture/grpc/gprc.options';
 import { MyConfigService } from '../src/config/config.service';
 import { DatabaseProvider } from '../src/infrastrusture/db/db.provider';
 import { ArtistRepo } from '../src/infrastrusture/artist/artist.repo';
@@ -94,7 +97,9 @@ describe('Artist gRPC (e2e)', () => {
     const dto = ArtistFixtures.createDto();
     const { id } = await repo.create(dto);
     const updatedDto = ArtistFixtures.updateDto();
-    const response = await lastValueFrom(client.updateArtist({ id, ...updatedDto }));
+    const response = await lastValueFrom(
+      client.updateArtist({ id, ...updatedDto }),
+    );
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty('artist');
@@ -105,7 +110,7 @@ describe('Artist gRPC (e2e)', () => {
   it('should delete artist via gRPC', async () => {
     const dto = ArtistFixtures.createDto();
     const { id } = await repo.create(dto);
-    const response = await lastValueFrom(client.deleteArtist({ id, }));
+    const response = await lastValueFrom(client.deleteArtist({ id }));
 
     expect(response).toBeDefined();
     expect(response).toEqual({});
@@ -115,22 +120,29 @@ describe('Artist gRPC (e2e)', () => {
     it.each([
       {
         method: 'getArtist',
-        call: () => client.getArtist({ id: ArtistFixtures.uuid() })
+        call: () => client.getArtist({ id: ArtistFixtures.uuid() }),
       },
       {
         method: 'deleteArtist',
-        call: () => client.deleteArtist({ id: ArtistFixtures.uuid() })
+        call: () => client.deleteArtist({ id: ArtistFixtures.uuid() }),
       },
       {
         method: 'updateArtist',
-        call: () => client.updateArtist({ id: ArtistFixtures.uuid(), ...ArtistFixtures.updateDto() })
+        call: () =>
+          client.updateArtist({
+            id: ArtistFixtures.uuid(),
+            ...ArtistFixtures.updateDto(),
+          }),
       },
-    ])('should return gRPC NOT_FOUND error when $method target does not exist', async ({ call }) => {
-      await expect(lastValueFrom(call())).rejects.toMatchObject({
-        code: 5,
-        details: expect.stringContaining('not found'),
-      });
-    });
+    ])(
+      'should return gRPC NOT_FOUND error when $method target does not exist',
+      async ({ call }) => {
+        await expect(lastValueFrom(call())).rejects.toMatchObject({
+          code: 5,
+          details: expect.stringContaining('not found'),
+        });
+      },
+    );
   });
 
   describe('Validation errors', () => {
@@ -138,24 +150,27 @@ describe('Artist gRPC (e2e)', () => {
       {
         method: 'getArtist',
         field: 'id',
-        call: () => client.getArtist({ id: 'invalid-uuid-format' })
+        call: () => client.getArtist({ id: 'invalid-uuid-format' }),
       },
       {
         method: 'updateArtist',
         field: 'name',
-        call: () => client.updateArtist({ id: ArtistFixtures.uuid(), name: '' })
+        call: () =>
+          client.updateArtist({ id: ArtistFixtures.uuid(), name: '' }),
       },
       {
         method: 'deleteArtist',
         field: 'id',
-        call: () => client.deleteArtist({ id: 'invalid-uuid-format' })
-      }
-    ])('should return gRPC INVALID_ARGUMENT error when $method params are invalid', async ({ call, field }) => {
-      await expect(lastValueFrom(call())).rejects.toMatchObject({
-        code: 13,
-        details: expect.stringContaining(field),
-      });
-    });
+        call: () => client.deleteArtist({ id: 'invalid-uuid-format' }),
+      },
+    ])(
+      'should return gRPC INVALID_ARGUMENT error when $method params are invalid',
+      async ({ call, field }) => {
+        await expect(lastValueFrom(call())).rejects.toMatchObject({
+          code: 13,
+          details: expect.stringContaining(field),
+        });
+      },
+    );
   });
-
 });

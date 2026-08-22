@@ -16,19 +16,20 @@ export abstract class DomainError extends Error {
   }
 }
 
-
 // Implementations of domain errors
 
 export class EntityNotFoundError extends DomainError {
   constructor(entityName: string) {
-    const capitalized = entityName.charAt(0).toUpperCase() + entityName.slice(1);
+    const capitalized =
+      entityName.charAt(0).toUpperCase() + entityName.slice(1);
     super(`${capitalized} not found`);
   }
 }
 
 export class EntityAlreadyExistsError extends DomainError {
   constructor(entityName: string) {
-    const capitalized = entityName.charAt(0).toUpperCase() + entityName.slice(1);
+    const capitalized =
+      entityName.charAt(0).toUpperCase() + entityName.slice(1);
     super(`${capitalized} already exists`);
   }
 }

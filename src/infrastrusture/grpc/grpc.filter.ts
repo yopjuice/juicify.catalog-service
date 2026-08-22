@@ -3,7 +3,10 @@ import { Observable, throwError } from 'rxjs';
 import { status } from '@grpc/grpc-js';
 import { DomainError } from '../../shared/errors/domain-errors';
 import * as errors from '../../shared/errors/domain-errors';
-import { IncomingGrpcError, IncomingHttpError } from '../../shared/errors/incoming-error.interface';
+import {
+  IncomingGrpcError,
+  IncomingHttpError,
+} from '../../shared/errors/incoming-error.interface';
 
 @Catch()
 export class GlobalGrpcExceptionFilter implements RpcExceptionFilter {
@@ -13,18 +16,27 @@ export class GlobalGrpcExceptionFilter implements RpcExceptionFilter {
 
     // Define error type
     const errorType = this.resolveErrorType(exception);
-    console.log({ code: exception.code, message: exception.message, errorType })
+    console.log({
+      code: exception.code,
+      message: exception.message,
+      errorType,
+    });
 
     switch (errorType) {
       case 'domain': {
         // We are sure that it's a DomainError
         const domainErr = exception as DomainError;
 
-        if (domainErr instanceof errors.EntityNotFoundError) code = status.NOT_FOUND;
-        else if (domainErr instanceof errors.EntityAlreadyExistsError) code = status.ALREADY_EXISTS;
-        else if (domainErr instanceof errors.InvalidArgumentError) code = status.INVALID_ARGUMENT;
-        else if (domainErr instanceof errors.UnauthenticatedError) code = status.UNAUTHENTICATED;
-        else if (domainErr instanceof errors.PermissionDeniedError) code = status.PERMISSION_DENIED;
+        if (domainErr instanceof errors.EntityNotFoundError)
+          code = status.NOT_FOUND;
+        else if (domainErr instanceof errors.EntityAlreadyExistsError)
+          code = status.ALREADY_EXISTS;
+        else if (domainErr instanceof errors.InvalidArgumentError)
+          code = status.INVALID_ARGUMENT;
+        else if (domainErr instanceof errors.UnauthenticatedError)
+          code = status.UNAUTHENTICATED;
+        else if (domainErr instanceof errors.PermissionDeniedError)
+          code = status.PERMISSION_DENIED;
         details = domainErr.message;
         break;
       }
@@ -58,7 +70,9 @@ export class GlobalGrpcExceptionFilter implements RpcExceptionFilter {
   }
 
   // Smart error type detector
-  private resolveErrorType(exception: any): 'domain' | 'grpc' | 'http' | 'system' {
+  private resolveErrorType(
+    exception: any,
+  ): 'domain' | 'grpc' | 'http' | 'system' {
     if (!exception) return 'system';
 
     // Our domain errors

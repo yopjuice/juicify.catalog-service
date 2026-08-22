@@ -1,4 +1,4 @@
-import { RpcException } from '@nestjs/microservices';
+import { EntityNotFoundError } from '../../shared/errors/domain-errors';
 import { Artist } from './artist.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistService } from './artist.service';
@@ -81,12 +81,12 @@ describe('ArtistService', () => {
     it('should throw an error if the artist is not found', async () => {
       jest
         .spyOn(repo, 'findById')
-        .mockRejectedValue(new RpcException('Artist not found'));
+        .mockRejectedValue(new EntityNotFoundError('artist'));
 
       const result = service.findById('non-existent-id');
 
       expect(repo.findById).toHaveBeenCalledWith('non-existent-id');
-      await expect(result).rejects.toThrow(RpcException);
+      await expect(result).rejects.toThrow(EntityNotFoundError);
     });
   });
 
@@ -106,11 +106,11 @@ describe('ArtistService', () => {
       const dto = ArtistFixtures.updateDto();
       jest
         .spyOn(repo, 'update')
-        .mockRejectedValue(new RpcException('Artist not found'));
+        .mockRejectedValue(new EntityNotFoundError('artist'));
 
       const result = service.update('non-existent-id', dto);
 
-      await expect(result).rejects.toThrow(RpcException);
+      await expect(result).rejects.toThrow(EntityNotFoundError);
       expect(repo.update).toHaveBeenCalledWith('non-existent-id', dto);
     });
   });
@@ -129,11 +129,11 @@ describe('ArtistService', () => {
     it('should throw an error if the artist is not found', async () => {
       jest
         .spyOn(repo, 'delete')
-        .mockRejectedValue(new RpcException('Artist not found'));
+        .mockRejectedValue(new EntityNotFoundError('artist'));
 
       const result = service.delete('non-existent-id');
 
-      await expect(result).rejects.toThrow(RpcException);
+      await expect(result).rejects.toThrow(EntityNotFoundError);
       expect(repo.delete).toHaveBeenCalledWith('non-existent-id');
     });
   });

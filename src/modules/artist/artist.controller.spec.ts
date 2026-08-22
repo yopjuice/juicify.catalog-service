@@ -1,4 +1,4 @@
-import { RpcException } from '@nestjs/microservices';
+import { EntityNotFoundError } from '../../shared/errors/domain-errors';
 import { Artist } from './artist.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistController } from './artist.controller';
@@ -85,12 +85,12 @@ describe('ArtistController', () => {
     it('should throw an error if the artist is not found', async () => {
       jest
         .spyOn(service, 'findById')
-        .mockRejectedValue(new RpcException('Artist not found'));
+        .mockRejectedValue(new EntityNotFoundError('artist'));
 
       const result = controller.findOne({ id: 'non-existent-id' });
 
       expect(service.findById).toHaveBeenCalledWith('non-existent-id');
-      await expect(result).rejects.toThrow(RpcException);
+      await expect(result).rejects.toThrow(EntityNotFoundError);
     });
   });
 
@@ -110,11 +110,11 @@ describe('ArtistController', () => {
     it('should throw an error if the artist is not found', async () => {
       jest
         .spyOn(service, 'update')
-        .mockRejectedValue(new RpcException('Artist not found'));
+        .mockRejectedValue(new EntityNotFoundError('artist'));
 
       const result = controller.update({ id: 'non-existent-id' });
 
-      await expect(result).rejects.toThrow(RpcException);
+      await expect(result).rejects.toThrow(EntityNotFoundError);
       expect(service.update).toHaveBeenCalledWith('non-existent-id', {});
     });
   });
@@ -133,11 +133,11 @@ describe('ArtistController', () => {
     it('should throw an error if the artist is not found', async () => {
       jest
         .spyOn(service, 'delete')
-        .mockRejectedValue(new RpcException('Artist not found'));
+        .mockRejectedValue(new EntityNotFoundError('artist'));
 
       const result = controller.delete({ id: 'non-existent-id' });
 
-      await expect(result).rejects.toThrow(RpcException);
+      await expect(result).rejects.toThrow(EntityNotFoundError);
       expect(service.delete).toHaveBeenCalledWith('non-existent-id');
     });
   });

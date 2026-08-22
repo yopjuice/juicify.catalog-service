@@ -7,4 +7,7 @@ export const createDatabaseProviderMock = (): Record<
   query: jest.fn(),
   queryOne: jest.fn(),
   onApplicationShutdown: jest.fn(),
+  run: jest.fn(),
+  runOne: jest.fn(),
+  runInTransaction: jest.fn(),
 });

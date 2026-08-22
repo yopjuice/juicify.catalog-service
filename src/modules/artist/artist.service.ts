@@ -7,7 +7,7 @@ import { EntityNotFoundError } from '../../shared/errors/domain-errors';
 
 @Injectable()
 export class ArtistService {
-  constructor(private readonly artistRepository: ArtistRepo) { }
+  constructor(private readonly artistRepository: ArtistRepo) {}
 
   async findAll(): Promise<Artist[]> {
     return this.artistRepository.findAll();
@@ -18,8 +18,7 @@ export class ArtistService {
 
   async findById(id: string): Promise<Artist> {
     const artist = await this.artistRepository.findById(id);
-    if (!artist)
-      throw new EntityNotFoundError('artist');
+    if (!artist) throw new EntityNotFoundError('artist');
     return artist;
   }
 

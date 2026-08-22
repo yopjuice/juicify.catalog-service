@@ -1,50 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 import { buildUpdateQuery } from '../../shared/utils/sql-update-builder';
 import { UpdateArtistDto } from '../../modules/artist/dto/update-artist.dto';
 import { Artist } from '../../modules/artist/artist.entity';
 import { ArtistMapper, DbArtist } from './artist.mapper';
-import { loadSql } from '../../shared/utils/load-sql';
 import { DatabaseProvider } from '../db/db.provider';
 import { CreateArtistDto } from '../../modules/artist/dto/create-artist.dto';
 import { EntityNotFoundError } from '../../shared/errors/domain-errors';
+import { artistFindById } from '../../../sql/queries/generated/artist.findById.types';
+import { artistCreate } from '../../../sql/queries/generated/artist.create.types';
+import { artistDelete } from '../../../sql/queries/generated/artist.delete.types';
+import { artistFindAll } from '../../../sql/queries/generated/artist.findall.types';
 
 @Injectable()
 export class ArtistRepo {
   constructor(
     private readonly db: DatabaseProvider,
     // private readonly logger: any,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Artist[]> {
-    const sql = loadSql('artist', 'artist.findall.sql');
-    const rows = await this.db.query<DbArtist>(sql);
+    const rows = await this.db.run(artistFindAll);
     return rows.map((row) => ArtistMapper.toDomain(row));
   }
 
   async create(dto: CreateArtistDto): Promise<Artist> {
-    const sql = `
-      INSERT INTO artists (
-        name, biography, avatar_url, is_verified, created_at, updated_at
-      ) VALUES ($1, $2, $3, $4, NOW(), NOW())
-      RETURNING *
-    `;
-
-    const values = [
-      dto.name,
-      dto.biography || null,
-      dto.avatarUrl || null,
-      dto.isVerified || false,
-    ];
-    const row = (await this.db.queryOne<DbArtist>(sql, values)) as DbArtist;
+    const row = await this.db.runOne(artistCreate, {
+      name: dto.name,
+      biography: dto.biography || null,
+      avatar_url: dto.avatarUrl || null,
+      is_verified: dto.isVerified || false,
+    }) as DbArtist;
     return ArtistMapper.toDomain(row);
   }
 
   async findById(id: string): Promise<Artist | null> {
-    const query = `
-      SELECT * FROM artists WHERE id = $1
-    `;
-    const result = await this.db.queryOne<DbArtist>(query, [id]);
+    const result = await this.db.runOne(artistFindById, { id });
     if (!result) return null;
     return ArtistMapper.toDomain(result);
   }
@@ -56,11 +46,8 @@ export class ArtistRepo {
     if (!existingArtist) {
       throw new EntityNotFoundError('artist');
     }
-    const query = `
-      DELETE FROM artists WHERE id = $1
-    `;
 
-    await this.db.queryOne(query, [id]);
+    await this.db.runOne(artistDelete, { id })
     return true;
   }
 

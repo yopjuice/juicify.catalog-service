@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { MyConfigService } from './config/config.service';
 import { GrpcValidationPipe } from './infrastrusture/grpc/grpc.validation-pipe';
 import { GlobalGrpcExceptionFilter } from './infrastrusture/grpc/grpc.filter';
-import {createGrpcServer} from './infrastrusture/grpc/grpc.server';
+import { createGrpcServer } from './infrastrusture/grpc/grpc.server';
 import { MyConfigModule } from './config/config.module';
 
 async function bootstrap() {
