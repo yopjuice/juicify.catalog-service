@@ -7,20 +7,19 @@ import {
   IncomingGrpcError,
   IncomingHttpError,
 } from '../../shared/errors/incoming-error.interface';
+import { Logger } from '@nestjs/common';
 
 @Catch()
 export class GlobalGrpcExceptionFilter implements RpcExceptionFilter {
+
+  private readonly logger = new Logger(GlobalGrpcExceptionFilter.name);
+
   catch(exception: any, host: ArgumentsHost): Observable<any> {
     let code = status.INTERNAL;
     let details: string = 'No details';
 
     // Define error type
     const errorType = this.resolveErrorType(exception);
-    console.log({
-      code: exception.code,
-      message: exception.message,
-      errorType,
-    });
 
     switch (errorType) {
       case 'domain': {
@@ -59,7 +58,7 @@ export class GlobalGrpcExceptionFilter implements RpcExceptionFilter {
       default: {
         // Critical erroor
         if (exception instanceof Error) {
-          console.error('[Critical system error]:', exception);
+          this.logger.error('[Critical system error]:', exception);
           details = exception.message;
         }
         break;

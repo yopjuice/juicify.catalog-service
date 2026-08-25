@@ -63,3 +63,5 @@ export class ResourceExhaustedError extends DomainError {
     super(message);
   }
 }
+
+export class ValidationError extends DomainError {}

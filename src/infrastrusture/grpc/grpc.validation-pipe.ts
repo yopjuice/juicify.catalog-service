@@ -3,9 +3,13 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { RpcException } from '@nestjs/microservices';
 import * as grpc from '@grpc/grpc-js';
+import {Logger} from '@nestjs/common';
 
 @Injectable()
 export class GrpcValidationPipe implements PipeTransform<any> {
+
+  private readonly logger = new Logger(GrpcValidationPipe.name);
+
   async transform(value: any, { metatype }: ArgumentMetadata) {
     // Skip validation if there's no DTO metatype assigned to the payload
     if (!metatype || !this.toValidate(metatype)) {
@@ -22,7 +26,7 @@ export class GrpcValidationPipe implements PipeTransform<any> {
         .map((err) => Object.values(err.constraints || {}).join(', '))
         .join('; ');
 
-      console.log(errorMessages);
+      this.logger.log(errorMessages);
       // Throw a proper gRPC RpcException with an INVALID_ARGUMENT code
       throw new RpcException({
         code: grpc.status.INVALID_ARGUMENT,

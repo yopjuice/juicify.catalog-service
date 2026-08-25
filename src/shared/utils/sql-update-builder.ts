@@ -1,4 +1,5 @@
 import { caseTransformer } from './case-transformer';
+import {Logger} from '@nestjs/common';
 
 interface UpdateParams {
   table: string;
@@ -14,6 +15,8 @@ export function buildUpdateQuery({ table, data, where }: UpdateParams): {
   const updates: string[] = [];
   const values: any[] = [];
   let paramCount = 1;
+  
+  const logger = new Logger(buildUpdateQuery.name);
 
   // Building SET clause
   for (const [key, value] of Object.entries(data)) {
@@ -45,7 +48,7 @@ export function buildUpdateQuery({ table, data, where }: UpdateParams): {
     WHERE ${whereClauses.join(' AND ')}
     RETURNING *
   `;
-  console.log({ data, where, query });
+  logger.log({ data, where, query });
 
   return { query, values };
 }
