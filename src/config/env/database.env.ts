@@ -5,18 +5,13 @@ import { DatabaseValidator } from '../validators/database.validator';
 
 // Loader for database env
 export const databaseEnv = registerAs<DatabaseConfig>('database', () => {
-  try {
-    const env = validateEnv(process.env, DatabaseValidator);
-    return {
-      url: env.DATABASE_URL,
-      host: env.DATABASE_HOST,
-      port: env.DATABASE_PORT,
-      user: env.DATABASE_USER,
-      password: env.DATABASE_PASSWORD,
-      db: env.DATABASE_DB,
-    };
-  } catch (e: any) {
-    console.error(e.message ?? 'Env validation error');
-    process.exit(1);
-  }
+  const env = validateEnv(process.env, DatabaseValidator);
+  return {
+    url: env.DATABASE_URL,
+    host: env.DATABASE_HOST,
+    port: env.DATABASE_PORT,
+    user: env.DATABASE_USER,
+    password: env.DATABASE_PASSWORD,
+    db: env.DATABASE_DB,
+  };
 });

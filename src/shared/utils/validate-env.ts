@@ -1,5 +1,6 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
+import { ValidationError } from '../errors/domain-errors';
 
 // Validates object against class schema and returns safe object
 export function validateEnv<T extends object>(
@@ -18,7 +19,7 @@ export function validateEnv<T extends object>(
     const msg = errors
       .map((e) => Object.values(e.constraints ?? {}).join(', '))
       .join('; ');
-    throw new Error(`Environment validation failed: ${msg}`);
+    throw new ValidationError(`Environment validation failed: ${msg}`);
   }
   return validatedConfig;
 }

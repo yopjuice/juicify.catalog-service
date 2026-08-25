@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool, QueryResultRow, PoolClient } from 'pg';
 import { MyConfigService } from '../../config/config.service';
+import { Logger } from '@nestjs/common';
 
 // Interface for PgtypedQuery generated functions
 interface PgtypedQuery<TParams, TResult> {
@@ -11,6 +12,7 @@ interface PgtypedQuery<TParams, TResult> {
 @Injectable()
 export class DatabaseProvider implements OnApplicationShutdown {
   private readonly pool: Pool;
+  private readonly logger = new Logger(DatabaseProvider.name);
 
   constructor(private readonly config: MyConfigService) {
     this.pool = new Pool({
@@ -27,7 +29,7 @@ export class DatabaseProvider implements OnApplicationShutdown {
 
     // Log errors
     this.pool.on('error', (err) => {
-      console.error('Unexpected error on idle pg client', err);
+      this.logger.error('Unexpected error on idle pg client', err);
       // TODO: change to NestJS logger
     });
   }
@@ -46,12 +48,12 @@ export class DatabaseProvider implements OnApplicationShutdown {
       const duration = Date.now() - start;
 
       if (duration > 100) {
-        console.log(`[Slow Pgtyped Query] ${duration}ms`);
+        this.logger.log(`[Slow Pgtyped Query] ${duration}ms`);
       }
 
       return rows;
     } catch (error) {
-      console.error(`[DB Pgtyped Error]`, error);
+      this.logger.error(`[DB Pgtyped Error]`, error);
       throw error;
     }
   }
@@ -75,19 +77,19 @@ export class DatabaseProvider implements OnApplicationShutdown {
       const duration = Date.now() - start;
 
       if (duration > 100) {
-        console.log(`[Slow Query] ${duration}ms: ${text.substring(0, 50)}...`);
+        this.logger.log(`[Slow Query] ${duration}ms: ${text.substring(0, 50)}...`);
       }
 
       return res.rows;
     } catch (error) {
-      console.error(`[DB Query Error] ${text}`, error);
+      this.logger.error(`[DB Query Error] ${text}`, error);
       throw error;
     }
   }
 
   // Close connection pool on shutdown
   public async onApplicationShutdown(): Promise<void> {
-    console.log('Closing database connection pool...');
+    this.logger.log('Closing database connection pool...');
     await this.pool.end();
   }
 
@@ -114,10 +116,5 @@ export class DatabaseProvider implements OnApplicationShutdown {
     } finally {
       client.release();
     }
-  }
-
-  public async queryOne<T = any>(text: string, params?: any[]): Promise<T | null> {
-    const res = await this.query<T>(text, params);
-    return res[0] || null;
   }
 }

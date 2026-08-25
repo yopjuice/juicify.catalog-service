@@ -6,22 +6,26 @@ import { UpdateArtistPayloadDto } from './dto/update-artist.dto';
 import type { PingResponse } from '@juice11-micro/contracts';
 import { DeleteArtistDto } from './dto/delete-artist.dto';
 import { GetArtistDto } from './dto/get-artist.dto';
+import { Logger } from '@nestjs/common';
 
 @Controller()
 export class ArtistController {
+  private readonly logger = new Logger(ArtistController.name);
+
   constructor(private readonly artistService: ArtistService) {}
 
   // Simple ping handler for testing
   // TODO:move this elsewhere or remove
   @GrpcMethod('CatalogService', 'Ping')
   ping(): PingResponse {
-    console.log('Ping');
+    this.logger.log('Ping');
     return { ok: true };
   }
   @GrpcMethod('ArtistService', 'ListArtists')
   async findAll() {
     const res = await this.artistService.findAll();
-    console.log(res);
+    this.logger.log(res);
+
     return { artists: res };
   }
 
@@ -34,7 +38,7 @@ export class ArtistController {
   @GrpcMethod('ArtistService', 'GetArtist')
   async findOne(@Payload() payload: GetArtistDto) {
     const res = await this.artistService.findById(payload.id);
-    console.log(res);
+    this.logger.log(res);
     return { artist: res };
   }
 
@@ -42,14 +46,14 @@ export class ArtistController {
   async update(@Payload() payload: UpdateArtistPayloadDto) {
     const { id, ...dto } = payload;
     const res = await this.artistService.update(id, dto);
-    console.log(res);
+    this.logger.log(res);
     return { artist: res };
   }
 
   @GrpcMethod('ArtistService', 'DeleteArtist')
   async delete(@Payload() payload: DeleteArtistDto) {
     const res = await this.artistService.delete(payload.id);
-    console.log(res);
+    this.logger.log(res);
     return undefined;
   }
 }

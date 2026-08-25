@@ -4,6 +4,8 @@ import { GrpcValidationPipe } from './infrastrusture/grpc/grpc.validation-pipe';
 import { GlobalGrpcExceptionFilter } from './infrastrusture/grpc/grpc.filter';
 import { createGrpcServer } from './infrastrusture/grpc/grpc.server';
 import { MyConfigModule } from './config/config.module';
+import { GrpcServerInterceptor } from './infrastrusture/grpc/grpc.server.interceptor';
+import { MyLogger } from './infrastrusture/logger/logger.service';
 
 async function bootstrap() {
   // Resolves MyConfigModule ONLY
@@ -17,6 +19,10 @@ async function bootstrap() {
   app.useGlobalPipes(new GrpcValidationPipe());
   // Map domain errors to gRPC
   app.useGlobalFilters(new GlobalGrpcExceptionFilter());
+  // For logging and etc 
+  app.useGlobalInterceptors(new GrpcServerInterceptor());
+
+  app.useLogger(new MyLogger());
 
   await configContext.close();
 
