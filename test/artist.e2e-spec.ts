@@ -14,11 +14,14 @@ import { MyConfigService } from '../src/config/config.service';
 import { DatabaseProvider } from '../src/infrastrusture/db/db.provider';
 import { ArtistRepo } from '../src/infrastrusture/artist/artist.repo';
 import { ArtistFixtures } from '../src/modules/artist/fixtures/artist.fixture';
+import { GrpcToPromise } from '../src/shared/types';
+import { ArtistGrpc } from '../src/infrastrusture/artist/artist.client';
 
 // TODO: add separate database for testing
 describe('Artist gRPC (e2e)', () => {
   let app: INestMicroservice;
-  let client: ArtistServiceClient;
+  let wrapper: ArtistGrpc;
+  let client: GrpcToPromise<ArtistServiceClient>;
   let db: DatabaseProvider;
   let repo: ArtistRepo;
 
@@ -46,9 +49,8 @@ describe('Artist gRPC (e2e)', () => {
     app.useGlobalFilters(new GlobalGrpcExceptionFilter());
     await app.listen();
 
-    // create gRPC client proxy for sending grpc requests
-    const grpcClientProxy = new ClientGrpcProxy(protoOptions.options);
-    client = grpcClientProxy.getService<ArtistServiceClient>('ArtistService');
+    wrapper = moduleFixture.get<ArtistGrpc>(ArtistGrpc);
+    client = wrapper.client;
 
     db = moduleFixture.get<DatabaseProvider>(DatabaseProvider);
     repo = moduleFixture.get<ArtistRepo>(ArtistRepo);
@@ -65,7 +67,7 @@ describe('Artist gRPC (e2e)', () => {
 
   it('should create artist via gRPC', async () => {
     const dto = ArtistFixtures.createDto();
-    const response = await lastValueFrom(client.createArtist(dto));
+    const response = await client.createArtist(dto);
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty('artist');
@@ -75,7 +77,7 @@ describe('Artist gRPC (e2e)', () => {
   it('should get artist by id via gRPC', async () => {
     const dto = ArtistFixtures.createDto();
     const { id } = await repo.create(dto);
-    const response = await lastValueFrom(client.getArtist({ id }));
+    const response = await client.getArtist({ id });
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty('artist');
@@ -84,7 +86,7 @@ describe('Artist gRPC (e2e)', () => {
   it('should get all artists via gRPC', async () => {
     const dto = ArtistFixtures.createDto();
     const { id } = await repo.create(dto);
-    const response = await lastValueFrom(client.listArtists({}));
+    const response = await client.listArtists({});
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty('artists');
@@ -97,9 +99,8 @@ describe('Artist gRPC (e2e)', () => {
     const dto = ArtistFixtures.createDto();
     const { id } = await repo.create(dto);
     const updatedDto = ArtistFixtures.updateDto();
-    const response = await lastValueFrom(
-      client.updateArtist({ id, ...updatedDto }),
-    );
+    const response = await client.updateArtist({ id, ...updatedDto });
+    
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty('artist');
@@ -110,7 +111,7 @@ describe('Artist gRPC (e2e)', () => {
   it('should delete artist via gRPC', async () => {
     const dto = ArtistFixtures.createDto();
     const { id } = await repo.create(dto);
-    const response = await lastValueFrom(client.deleteArtist({ id }));
+    const response = await client.deleteArtist({ id });
 
     expect(response).toBeDefined();
     expect(response).toEqual({});
@@ -137,7 +138,7 @@ describe('Artist gRPC (e2e)', () => {
     ])(
       'should return gRPC NOT_FOUND error when $method target does not exist',
       async ({ call }) => {
-        await expect(lastValueFrom(call())).rejects.toMatchObject({
+        await expect(call()).rejects.toMatchObject({
           code: 5,
           details: expect.stringContaining('not found'),
         });
@@ -166,7 +167,7 @@ describe('Artist gRPC (e2e)', () => {
     ])(
       'should return gRPC INVALID_ARGUMENT error when $method params are invalid',
       async ({ call, field }) => {
-        await expect(lastValueFrom(call())).rejects.toMatchObject({
+        await expect(call()).rejects.toMatchObject({
           code: 13,
           details: expect.stringContaining(field),
         });
