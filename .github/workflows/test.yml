@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: local-ubuntu
     env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }} 
         DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
@@ -36,11 +36,11 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm update @juice11-micro/contracts
-          pnpm install --frozen-lockfile
+          pnpm install --frozen-lockfile --shamefully-hoist
 
       # Generate /generated folder with SQL queries
       - name: Generate SQL Types
-        run: pnpm exec pgtyped -c pgtyped.config.json
+        run: pnpm run db:types
 
       # Compile code
       - name: Build application
