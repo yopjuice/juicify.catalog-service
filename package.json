@@ -26,7 +26,9 @@
     "db:apply": "PGPASSWORD='postgres' psqldef -U postgres -h localhost -p 5432 juicify  < sql/schema.sql",
     "db:types": "pnpm exec dotenv -e .env -- pnpm exec pgtyped -c pgtyped.config.json",
     "test:unit": "node --import tsx --test src/**/*.unit.test.ts",
-    "test:integration": "node --import tsx --test src/**/*.integration.test.ts"
+    "test:integration": "node --import tsx --test src/**/*.integration.test.ts",
+    "dry-ci": "act ",
+    "dry-cd": "act -P local-ubuntu=-self-hosted"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
@@ -95,7 +97,13 @@
       "node_modules/(?!\\.pnpm/|@nestjs)"
     ],
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!main.(t|j)s",
+      "!**/*.module.(t|j)s",
+      "!**/*.dto.(t|j)s",
+      "!**/*.options.(t|j)s",
+      "!**/*.fixture.(t|j)s",
+      "!**/*.mock.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",

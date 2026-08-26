@@ -1,0 +1,48 @@
+name: NestJS Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: |
+          pnpm update @juice11-micro/contracts
+          pnpm install --frozen-lockfile
+
+      # Generate /generated folder with SQL queries
+      - name: Generate SQL Types
+        run: |
+          pnpm run db:types
+
+      # Compile code
+      - name: Build application
+        run: |
+          pnpm build
+
+      - name: Run unit tests
+        run: pnpm test
+
+      - name: Run e2e tests
+        run: pnpm test:e2e
