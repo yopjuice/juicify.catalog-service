@@ -40,8 +40,7 @@ jobs:
 
       # Generate /generated folder with SQL queries
       - name: Generate SQL Types
-        run: |
-          pnpm run db:types
+        run: pnpm exec pgtyped -c pgtyped.config.json
 
       # Compile code
       - name: Build application
