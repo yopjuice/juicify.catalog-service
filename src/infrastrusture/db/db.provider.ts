@@ -16,12 +16,7 @@ export class DatabaseProvider implements OnApplicationShutdown {
 
   constructor(private readonly config: MyConfigService) {
     this.pool = new Pool({
-      host: this.config.get('database.host'),
-      port: this.config.get('database.port'),
-      database: this.config.get('database.db'),
-      user: this.config.get('database.user'),
-      password: this.config.get('database.password'),
-      // Pull settings
+      connectionString: this.config.get('database.url'),
       max: 20, // Max number of clients in the pool
       idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
       connectionTimeoutMillis: 2000, // Connection timeout of 2 seconds
