@@ -31,10 +31,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: "pnpm"
 
       - name: Install dependencies
         run: |
+          rm -rf node_modules
           pnpm update @juice11-micro/contracts
           pnpm install --frozen-lockfile --shamefully-hoist
 
