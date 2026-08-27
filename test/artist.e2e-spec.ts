@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import '@grpc/proto-loader';
+import '@grpc/grpc-js'
 import { GrpcValidationPipe } from '../src/infrastrusture/grpc/grpc.validation-pipe';
 import { GlobalGrpcExceptionFilter } from '../src/infrastrusture/grpc/grpc.filter';
 import { INestMicroservice } from '@nestjs/common';
-import { Transport, ClientGrpcProxy } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 import { AppModule } from '../src/app/app.module';
-import { lastValueFrom } from 'rxjs';
 import { ArtistServiceClient } from '@juice11-micro/contracts';
 import {
   grpcPackages,
@@ -100,7 +101,7 @@ describe('Artist gRPC (e2e)', () => {
     const { id } = await repo.create(dto);
     const updatedDto = ArtistFixtures.updateDto();
     const response = await client.updateArtist({ id, ...updatedDto });
-    
+
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty('artist');
