@@ -17,6 +17,8 @@ jobs:
         DATABASE_USER: ${{ secrets.DATABASE_USER }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         DATABASE_DB: ${{ secrets.DATABASE_DB }}
+        GRPC_HOST: ${{ secrets.GRPC_HOST }}
+        GRPC_PORT: ${{ secrets.GRPC_PORT }}
 
     steps:
       - name: Checkout repository
