@@ -1,33 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
-import { ArtistRepo } from '../../infrastrusture/artist/artist.repo';
-import { Artist } from './artist.entity';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
+import { AlbumRepo } from '../../infrastrusture/album/album.repo';
+import { Album } from './album.entity';
 import { EntityNotFoundError } from '../../shared/errors/domain-errors';
 
 @Injectable()
-export class ArtistService {
-  constructor(private readonly artistRepository: ArtistRepo) {}
+export class AlbumService {
+  constructor(private readonly albumRepository: AlbumRepo) {}
 
-  async findAll(): Promise<Artist[]> {
-    return this.artistRepository.findAll();
+  async findAll(): Promise<Album[]> {
+    return this.albumRepository.findAll();
   }
-  async create(dto: CreateArtistDto): Promise<Artist> {
-    return this.artistRepository.create(dto);
-  }
-
-  async findById(id: string): Promise<Artist> {
-    const artist = await this.artistRepository.findById(id);
-    if (!artist) throw new EntityNotFoundError('artist');
-    return artist;
+  async create(dto: CreateAlbumDto): Promise<Album> {
+    return this.albumRepository.create(dto);
   }
 
-  async update(id: string, dto: UpdateArtistDto): Promise<Artist> {
-    return this.artistRepository.update(id, dto);
+  async findById(id: string): Promise<Album> {
+    const album = await this.albumRepository.findById(id);
+    if (!album) throw new EntityNotFoundError('album');
+    return album;
+  }
+
+  async update(id: string, dto: UpdateAlbumDto): Promise<Album> {
+    return this.albumRepository.update(id, dto);
   }
 
   async delete(id: string): Promise<boolean> {
-    await this.artistRepository.delete(id);
+    await this.albumRepository.delete(id);
     return true;
   }
 }

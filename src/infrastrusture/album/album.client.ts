@@ -1,4 +1,4 @@
-import { ArtistServiceClient } from '@juice11-micro/contracts';
+import { AlbumServiceClient } from '@juice11-micro/contracts';
 import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
 import { lastValueFrom, Observable } from 'rxjs';
@@ -6,19 +6,19 @@ import { GrpcToPromise } from '../../shared/types';
 
 // Wrap gRPC service to make it work with promises and TS
 @Injectable()
-export class ArtistGrpc implements OnModuleInit {
-  private readonly logger = new Logger(ArtistGrpc.name);
-  private rawService: ArtistServiceClient;
+export class AlbumGrpc implements OnModuleInit {
+  private readonly logger = new Logger(AlbumGrpc.name);
+  private rawService: AlbumServiceClient;
   
-  public client: GrpcToPromise<ArtistServiceClient>; 
+  public client: GrpcToPromise<AlbumServiceClient>; 
 
   constructor(
-    @Inject('ARTIST_INTERNAL_PROXY') private readonly grpcClient: ClientGrpc,
+    @Inject('ALBUM_INTERNAL_PROXY') private readonly grpcClient: ClientGrpc,
   ) {}
 
   onModuleInit() {
     // Original gRPC service from Nest
-    this.rawService = this.grpcClient.getService<any>('ArtistService');
+    this.rawService = this.grpcClient.getService<any>('AlbumService');
 
     // Create proxy, which will call original methods
     this.client = new Proxy(this.rawService, {

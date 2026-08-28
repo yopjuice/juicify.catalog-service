@@ -1,19 +1,27 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { AlbumType } from '../album.entity';
+import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateArtistDto {
+export class CreateAlbumDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  title: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  releaseDate: string;
 
   @IsString()
   @IsOptional()
-  biography?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  isVerified?: boolean;
+  coverUrl?: string;
+ 
+  @IsEnum(AlbumType)
+  type: AlbumType;
 
   @IsString()
-  @IsOptional()
-  avatarUrl?: string;
+  @IsNotEmpty()
+  genreId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  artistId: string;
 }

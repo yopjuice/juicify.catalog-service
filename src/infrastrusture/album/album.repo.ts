@@ -1,73 +1,75 @@
 import { Injectable } from '@nestjs/common';
 import { buildUpdateQuery } from '../../shared/utils/sql-update-builder';
-import { UpdateArtistDto } from '../../modules/artist/dto/update-artist.dto';
-import { Artist } from '../../modules/artist/artist.entity';
-import { ArtistMapper, DbArtist } from './artist.mapper';
+import { UpdateAlbumDto } from '../../modules/album/dto/update-album.dto';
+import { Album, AlbumType } from '../../modules/album/album.entity';
+import { AlbumMapper, DbAlbum } from './album.mapper';
 import { DatabaseProvider } from '../db/db.provider';
-import { CreateArtistDto } from '../../modules/artist/dto/create-artist.dto';
+import { CreateAlbumDto } from '../../modules/album/dto/create-album.dto';
 import { EntityNotFoundError } from '../../shared/errors/domain-errors';
-import { artistFindById } from '../../../sql/queries/generated/artist.findById.types';
-import { artistCreate } from '../../../sql/queries/generated/artist.create.types';
-import { artistDelete } from '../../../sql/queries/generated/artist.delete.types';
-import { artistFindAll } from '../../../sql/queries/generated/artist.findall.types';
+import { albumFindById } from '../../../sql/queries/generated/album.findById.types';
+import { albumCreate } from '../../../sql/queries/generated/album.create.types';
+import { albumDelete } from '../../../sql/queries/generated/album.delete.types';
+import { albumFindAll } from '../../../sql/queries/generated/album.findall.types';
 
 @Injectable()
-export class ArtistRepo {
+export class AlbumRepo {
   constructor(
     private readonly db: DatabaseProvider,
     // private readonly logger: any,
   ) { }
 
-  async findAll(): Promise<Artist[]> {
-    const rows = await this.db.run(artistFindAll);
-    return rows.map((row) => ArtistMapper.toDomain(row));
+  async findAll(): Promise<Album[]> {
+    const rows = await this.db.run(albumFindAll);
+    return rows.map((row) => AlbumMapper.toDomain(row));
   }
 
-  async create(dto: CreateArtistDto): Promise<Artist> {
-    const row = await this.db.runOne(artistCreate, {
-      name: dto.name,
-      biography: dto.biography || null,
-      avatar_url: dto.avatarUrl || null,
-      is_verified: dto.isVerified || false,
-    }) as DbArtist;
-    return ArtistMapper.toDomain(row);
+  async create(dto: CreateAlbumDto): Promise<Album> {
+    const row = await this.db.runOne(albumCreate, {
+      title: dto.title,
+      release_date: dto.releaseDate,
+      cover_url: dto.coverUrl || null,
+      type: dto.type || AlbumType.Single,
+      genre_id: dto.genreId,
+      artist_id: dto.artistId,
+    }) as DbAlbum;
+    return AlbumMapper.toDomain(row);
   }
 
-  async findById(id: string): Promise<Artist | null> {
-    const result = await this.db.runOne(artistFindById, { id });
+  async findById(id: string): Promise<Album | null> {
+    const result = await this.db.runOne(albumFindById, { id });
     if (!result) return null;
-    return ArtistMapper.toDomain(result);
+    return AlbumMapper.toDomain(result);
   }
 
   // DELETE
   async delete(id: string): Promise<boolean> {
-    const existingArtist = await this.findById(id);
+    const existingAlbum = await this.findById(id);
 
-    if (!existingArtist) {
-      throw new EntityNotFoundError('artist');
+    if (!existingAlbum) {
+      throw new EntityNotFoundError('album');
     }
 
-    await this.db.runOne(artistDelete, { id })
+    await this.db.runOne(albumDelete, { id })
     return true;
   }
 
   // PARTIAL UPDATE
-  async update(id: string, dto: UpdateArtistDto): Promise<Artist> {
-    const existingArtist = await this.findById(id);
+  async update(id: string, dto: UpdateAlbumDto): Promise<Album> {
+    const existingAlbum = await this.findById(id);
 
-    if (!existingArtist) {
-      throw new EntityNotFoundError('artist');
+    if (!existingAlbum) {
+      throw new EntityNotFoundError('album');
     }
     const { query, values } = buildUpdateQuery({
-      table: 'artists',
+      table: 'albums',
       data: dto,
       where: { id },
     });
 
-    const result = (await this.db.queryOne<DbArtist>(
+    const result = (await this.db.queryOne<DbAlbum>(
       query,
       values,
-    )) as DbArtist;
-    return ArtistMapper.toDomain(result);
+    )) as DbAlbum;
+    return AlbumMapper.toDomain(result);
   }
 }

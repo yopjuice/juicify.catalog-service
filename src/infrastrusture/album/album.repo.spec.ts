@@ -1,19 +1,19 @@
 import { EntityNotFoundError } from '../../shared/errors/domain-errors';
-import { Artist } from '../../modules/artist/artist.entity';
+import { Album } from '../../modules/album/album.entity';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArtistRepo } from './artist.repo';
-import { ArtistFixtures } from '../../modules/artist/fixtures/artist.fixture';
+import { AlbumRepo } from './album.repo';
+import { AlbumFixtures } from '../../modules/album/fixtures/album.fixture';
 import { DatabaseProvider } from '../../infrastrusture/db/db.provider';
-import { createDatabaseProviderMock } from '../../modules/artist/mocks/db.mock';
+import { createDatabaseProviderMock } from '../../modules/album/mocks/db.mock';
 
-describe('ArtistRepo', () => {
-  let repo: ArtistRepo;
+describe('AlbumRepo', () => {
+  let repo: AlbumRepo;
   let dbConfig: DatabaseProvider;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ArtistRepo,
+        AlbumRepo,
         {
           provide: DatabaseProvider,
           useValue: createDatabaseProviderMock(),
@@ -21,10 +21,10 @@ describe('ArtistRepo', () => {
       ],
     }).compile();
 
-    repo = module.get<ArtistRepo>(ArtistRepo);
+    repo = module.get<AlbumRepo>(AlbumRepo);
     dbConfig = module.get<DatabaseProvider>(DatabaseProvider);
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -32,10 +32,10 @@ describe('ArtistRepo', () => {
   });
 
   describe('create', () => {
-    it('should return created artist', async () => {
-      const dto = ArtistFixtures.createDto();
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+    it('should return created album', async () => {
+      const dto = AlbumFixtures.createDto();
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(AlbumFixtures.raw());
 
       const result = await repo.create(dto);
 
@@ -45,11 +45,11 @@ describe('ArtistRepo', () => {
   });
 
   describe('findAll', () => {
-    it('should return a list of artists', async () => {
-      const expected = ArtistFixtures.array();
-      jest
+    it('should return a list of albums', async () => {
+      const expected = AlbumFixtures.array();
+      vi
         .spyOn(dbConfig, 'run')
-        .mockResolvedValue(ArtistFixtures.rawArray());
+        .mockResolvedValue(AlbumFixtures.rawArray());
 
       const result = await repo.findAll();
 
@@ -57,9 +57,9 @@ describe('ArtistRepo', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return an empty list if no artists are found', async () => {
+    it('should return an empty list if no albums are found', async () => {
       const expected = [];
-      jest.spyOn(dbConfig, 'run').mockResolvedValue(expected);
+      vi.spyOn(dbConfig, 'run').mockResolvedValue(expected);
 
       const result = await repo.findAll();
 
@@ -69,20 +69,20 @@ describe('ArtistRepo', () => {
   });
 
   describe('findById', () => {
-    it('should return an artist', async () => {
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+    it('should return an album', async () => {
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(AlbumFixtures.raw());
 
       const result = await repo.findById(expected.id);
 
       expect(dbConfig.runOne).toHaveBeenCalled();
       expect(result).toEqual(expected);
-      expect(result).toBeInstanceOf(Artist);
+      expect(result).toBeInstanceOf(Album);
     });
 
-    it('should return null if the artist is not found', async () => {
+    it('should return null if the album is not found', async () => {
       const expected = null;
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(null);
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(null);
 
       const result = await repo.findById('non-existent-id');
 
@@ -92,12 +92,12 @@ describe('ArtistRepo', () => {
   });
 
   describe('update', () => {
-    it('should return the updated artist', async () => {
-      const dto = ArtistFixtures.updateDto();
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+    it('should return the updated album', async () => {
+      const dto = AlbumFixtures.updateDto();
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(AlbumFixtures.raw());
       
-      jest.spyOn(dbConfig, 'queryOne').mockResolvedValue(ArtistFixtures.raw());
+      vi.spyOn(dbConfig, 'queryOne').mockResolvedValue(AlbumFixtures.raw());
 
       const result = await repo.update(expected.id, dto);
 
@@ -105,11 +105,11 @@ describe('ArtistRepo', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should throw an error if the artist is not found', async () => {
-      const dto = ArtistFixtures.updateDto();
-      jest
+    it('should throw an error if the album is not found', async () => {
+      const dto = AlbumFixtures.updateDto();
+      vi
         .spyOn(dbConfig, 'queryOne')
-        .mockRejectedValue(new EntityNotFoundError('artist'));
+        .mockRejectedValue(new EntityNotFoundError('album'));
 
       const result = repo.update('non-existent-id', dto);
 
@@ -120,8 +120,8 @@ describe('ArtistRepo', () => {
 
   describe('delete', () => {
     it('should return true on success', async () => {
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(AlbumFixtures.raw());
 
       const result = await repo.delete(expected.id);
 
@@ -129,10 +129,10 @@ describe('ArtistRepo', () => {
       expect(result).toEqual(true);
     });
 
-    it('should throw an error if the artist is not found', async () => {
-      jest
+    it('should throw an error if the album is not found', async () => {
+      vi
         .spyOn(dbConfig, 'runOne')
-        .mockRejectedValue(new EntityNotFoundError('artist'));
+        .mockRejectedValue(new EntityNotFoundError('album'));
 
       const result = repo.delete('non-existent-id');
 
