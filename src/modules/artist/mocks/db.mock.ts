@@ -1,13 +1,14 @@
 import { DatabaseProvider } from '../../../infrastrusture/db/db.provider';
+import {  Mock } from 'vitest';
 
 export const createDatabaseProviderMock = (): Record<
   keyof DatabaseProvider,
-  jest.Mock
+  Mock
 > => ({
-  query: jest.fn(),
-  queryOne: jest.fn(),
-  onApplicationShutdown: jest.fn(),
-  run: jest.fn(),
-  runOne: jest.fn(),
-  runInTransaction: jest.fn(),
+  query: vi.fn(),
+  queryOne: vi.fn(),
+  onApplicationShutdown: vi.fn(),
+  run: vi.fn(),
+  runOne: vi.fn(),
+  runInTransaction: vi.fn(),
 });

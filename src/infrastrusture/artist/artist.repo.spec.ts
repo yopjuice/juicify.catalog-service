@@ -24,7 +24,7 @@ describe('ArtistRepo', () => {
     repo = module.get<ArtistRepo>(ArtistRepo);
     dbConfig = module.get<DatabaseProvider>(DatabaseProvider);
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -35,7 +35,7 @@ describe('ArtistRepo', () => {
     it('should return created artist', async () => {
       const dto = ArtistFixtures.createDto();
       const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
 
       const result = await repo.create(dto);
 
@@ -47,7 +47,7 @@ describe('ArtistRepo', () => {
   describe('findAll', () => {
     it('should return a list of artists', async () => {
       const expected = ArtistFixtures.array();
-      jest
+      vi
         .spyOn(dbConfig, 'run')
         .mockResolvedValue(ArtistFixtures.rawArray());
 
@@ -59,7 +59,7 @@ describe('ArtistRepo', () => {
 
     it('should return an empty list if no artists are found', async () => {
       const expected = [];
-      jest.spyOn(dbConfig, 'run').mockResolvedValue(expected);
+      vi.spyOn(dbConfig, 'run').mockResolvedValue(expected);
 
       const result = await repo.findAll();
 
@@ -71,7 +71,7 @@ describe('ArtistRepo', () => {
   describe('findById', () => {
     it('should return an artist', async () => {
       const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
 
       const result = await repo.findById(expected.id);
 
@@ -82,7 +82,7 @@ describe('ArtistRepo', () => {
 
     it('should return null if the artist is not found', async () => {
       const expected = null;
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(null);
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(null);
 
       const result = await repo.findById('non-existent-id');
 
@@ -95,9 +95,9 @@ describe('ArtistRepo', () => {
     it('should return the updated artist', async () => {
       const dto = ArtistFixtures.updateDto();
       const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
       
-      jest.spyOn(dbConfig, 'queryOne').mockResolvedValue(ArtistFixtures.raw());
+      vi.spyOn(dbConfig, 'queryOne').mockResolvedValue(ArtistFixtures.raw());
 
       const result = await repo.update(expected.id, dto);
 
@@ -107,7 +107,7 @@ describe('ArtistRepo', () => {
 
     it('should throw an error if the artist is not found', async () => {
       const dto = ArtistFixtures.updateDto();
-      jest
+      vi
         .spyOn(dbConfig, 'queryOne')
         .mockRejectedValue(new EntityNotFoundError('artist'));
 
@@ -121,7 +121,7 @@ describe('ArtistRepo', () => {
   describe('delete', () => {
     it('should return true on success', async () => {
       const expected = ArtistFixtures.entity();
-      jest.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
+      vi.spyOn(dbConfig, 'runOne').mockResolvedValue(ArtistFixtures.raw());
 
       const result = await repo.delete(expected.id);
 
@@ -130,7 +130,7 @@ describe('ArtistRepo', () => {
     });
 
     it('should throw an error if the artist is not found', async () => {
-      jest
+      vi
         .spyOn(dbConfig, 'runOne')
         .mockRejectedValue(new EntityNotFoundError('artist'));
 
