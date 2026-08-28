@@ -1,57 +1,42 @@
-import { Artist, ArtistProps } from './artist.entity';
-import { ArtistFixtures } from './fixtures/artist.fixture';
+import { Album, AlbumProps } from './album.entity';
+import { AlbumFixtures } from './fixtures/album.fixture';
 
-describe('Artist Entity', () => {
+describe('Album Entity', () => {
   describe('Creation & Getters', () => {
     it('should correctly initialize and return properties via getters', () => {
-      const props = ArtistFixtures.props();
-      const artist = new Artist(props);
+      const props = AlbumFixtures.props();
+      const album = new Album(props);
 
-      expect(artist.id).toBe(props.id);
-      expect(artist.name).toBe(props.name);
-      expect(artist.biography).toBe(props.biography);
-      expect(artist.isVerified).toBe(false);
-      expect(artist.avatarUrl).toBe(props.avatarUrl);
-      expect(artist.createdAt).toBe(props.createdAt);
-      expect(artist.updatedAt).toBe(props.updatedAt);
+      expect(album.id).toBe(props.id);
+      expect(album.title).toBe(props.title);
+      expect(album.releaseDate).toBe(props.releaseDate);
+      expect(album.coverUrl).toBe(props.coverUrl);
+      expect(album.type).toBe(props.type);
+      expect(album.genreId).toBe(props.genreId);
+      expect(album.artistId).toBe(props.artistId);
+      expect(album.createdAt).toBe(props.createdAt);
+      expect(album.updatedAt).toBe(props.updatedAt);
     });
   });
 
-  describe('changeName()', () => {
-    it('should successfully change the name if it is 3 or more characters long', () => {
-      const artist = new Artist(ArtistFixtures.props({ name: 'Old Name' }));
+  describe('changeTitle()', () => {
+    it('should successfully change the title if it is 3 or more characters long', () => {
+      const album = new Album(AlbumFixtures.props({ title: 'Old title' }));
 
-      artist.changeName('New Name');
+      album.changeTitle('New title');
 
-      expect(artist.name).toBe('New Name');
+      expect(album.title).toBe('New title');
     });
 
-    it('should throw an error if the new name is less than 3 characters long', () => {
-      const artist = new Artist(ArtistFixtures.props({ name: 'Valid Name' }));
+    it('should throw an error if the new title is less than 3 characters long', () => {
+      const album = new Album(AlbumFixtures.props({ title: 'Valid title' }));
 
-      expect(() => artist.changeName('Jo')).toThrow(
-        'Name must be at least 3 characters long',
+      expect(() => album.changeTitle('Jo')).toThrow(
+        'title must be at least 3 characters long',
       );
 
-      expect(artist.name).toBe('Valid Name');
+      expect(album.title).toBe('Valid title');
     });
   });
 
-  describe('verify()', () => {
-    it('should change isVerified to true if it was false', () => {
-      const artist = new Artist(ArtistFixtures.props({ isVerified: false }));
-
-      artist.verify();
-
-      expect(artist.isVerified).toBe(true);
-    });
-
-    it('should do nothing and remain true if artist is already verified', () => {
-      const artist = new Artist(ArtistFixtures.props({ isVerified: true }));
-
-      artist.verify();
-
-      expect(artist.isVerified).toBe(true);
-    });
-  });
 });

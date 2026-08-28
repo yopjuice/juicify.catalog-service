@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ArtistService } from './artist.service';
-import { ArtistController } from './artist.controller';
-import { ArtistRepo } from '../../infrastrusture/artist/artist.repo';
+import { AlbumService } from './album.service';
+import { AlbumController } from './album.controller';
+import { AlbumRepo } from '../../infrastrusture/album/album.repo';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MyConfigService } from '../../config/config.service';
 import { grpcClientInterceptor } from '../../infrastrusture/grpc/grpc.client.interceptor';
 import { grpcPackages, grpcProtoPaths } from '../../infrastrusture/grpc/gprc.options';
-import { ArtistGrpc } from '../../infrastrusture/artist/artist.client';
+import { AlbumGrpc } from '../../infrastrusture/album/album.client';
 
 @Module({
-  controllers: [ArtistController],
-  providers: [ArtistService, ArtistRepo, ArtistGrpc],
+  controllers: [AlbumController],
+  providers: [AlbumService, AlbumRepo, AlbumGrpc],
   imports: [
     ClientsModule.registerAsync([
       {
-        name: 'ARTIST_INTERNAL_PROXY',
+        name: 'ALBUM_INTERNAL_PROXY',
         inject: [MyConfigService],
         useFactory: (config: MyConfigService) => ({
           transport: Transport.GRPC,
@@ -31,4 +31,4 @@ import { ArtistGrpc } from '../../infrastrusture/artist/artist.client';
     ]),
   ],
 })
-export class ArtistModule {}
+export class AlbumModule {}

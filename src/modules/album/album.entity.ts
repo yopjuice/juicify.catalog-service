@@ -1,18 +1,28 @@
-export interface ArtistProps {
+export interface AlbumProps {
   id: string;
-  name: string;
-  biography?: string;
-  isVerified: boolean;
-  avatarUrl?: string;
+  title: string;
+  releaseDate?: Date;
+  coverUrl?: string;
+  type: AlbumType;
+  genreId: string;
+  artistId: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export class Artist {
-  // Real data is secured
-  private props: ArtistProps;
+export const AlbumType = {
+  LP: 'LP',
+  EP: 'EP',
+  Single: 'Single',
+} as const;
 
-  constructor(props: ArtistProps) {
+export type AlbumType = typeof AlbumType[keyof typeof AlbumType];
+
+export class Album {
+  // Real data is secured
+  private props: AlbumProps;
+
+  constructor(props: AlbumProps) {
     this.props = props;
   }
   // Getters and setters for props
@@ -20,17 +30,23 @@ export class Artist {
   public get id(): string {
     return this.props.id;
   }
-  public get name(): string {
-    return this.props.name;
+  public get title(): string {
+    return this.props.title;
   }
-  public get biography(): string | undefined {
-    return this.props.biography;
+  public get releaseDate(): Date | undefined {
+    return this.props.releaseDate;
   }
-  public get isVerified(): boolean {
-    return this.props.isVerified;
+  public get coverUrl(): string | undefined {
+    return this.props.coverUrl;
   }
-  public get avatarUrl(): string | undefined {
-    return this.props.avatarUrl;
+  public get type(): AlbumType {
+    return this.props.type;
+  }
+  public get genreId(): string {
+    return this.props.genreId;
+  }
+  public get artistId(): string {
+    return this.props.artistId;
   }
   public get createdAt(): Date {
     return this.props.createdAt;
@@ -39,14 +55,10 @@ export class Artist {
     return this.props.updatedAt;
   }
 
-  public changeName(newName: string): void {
-    if (newName.length < 3)
-      throw new Error('Name must be at least 3 characters long');
-    this.props.name = newName;
+  public changeTitle(newtitle: string): void {
+    if (newtitle.length < 3)
+      throw new Error('title must be at least 3 characters long');
+    this.props.title = newtitle;
   }
 
-  public verify(): void {
-    if (this.props.isVerified) return;
-    this.props.isVerified = true;
-  }
 }

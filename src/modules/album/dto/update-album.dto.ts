@@ -1,10 +1,10 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateArtistDto } from './create-artist.dto';
+import { CreateAlbumDto } from './create-album.dto';
 import { IsUUID } from 'class-validator';
 
-export class UpdateArtistDto extends PartialType(CreateArtistDto) {}
+export class UpdateAlbumDto extends PartialType(CreateAlbumDto) {}
 
-export class UpdateArtistPayloadDto extends UpdateArtistDto {
+export class UpdateAlbumPayloadDto extends UpdateAlbumDto {
   @IsUUID()
   id: string;
 }

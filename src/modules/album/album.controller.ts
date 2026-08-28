@@ -1,18 +1,18 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
-import { ArtistService } from './artist.service';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistPayloadDto } from './dto/update-artist.dto';
+import { AlbumService } from './album.service';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumPayloadDto } from './dto/update-album.dto';
 import type { PingResponse } from '@juice11-micro/contracts';
-import { DeleteArtistDto } from './dto/delete-artist.dto';
-import { GetArtistDto } from './dto/get-artist.dto';
+import { DeleteAlbumDto } from './dto/delete-album.dto';
+import { GetAlbumDto } from './dto/get-album.dto';
 import { Logger } from '@nestjs/common';
 
 @Controller()
-export class ArtistController {
-  private readonly logger = new Logger(ArtistController.name);
+export class AlbumController {
+  private readonly logger = new Logger(AlbumController.name);
 
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(private readonly albumService: AlbumService) {}
 
   // Simple ping handler for testing
   // TODO:move this elsewhere or remove
@@ -21,38 +21,38 @@ export class ArtistController {
     this.logger.log('Ping');
     return { ok: true };
   }
-  @GrpcMethod('ArtistService', 'ListArtists')
+  @GrpcMethod('AlbumService', 'ListAlbums')
   async findAll() {
-    const res = await this.artistService.findAll();
+    const res = await this.albumService.findAll();
     this.logger.log(res);
 
-    return { artists: res };
+    return { albums: res };
   }
 
-  @GrpcMethod('ArtistService', 'CreateArtist')
-  async create(@Payload() payload: CreateArtistDto) {
-    const res = await this.artistService.create(payload);
-    return { artist: res };
+  @GrpcMethod('AlbumService', 'CreateAlbum')
+  async create(@Payload() payload: CreateAlbumDto) {
+    const res = await this.albumService.create(payload);
+    return { album: res };
   }
 
-  @GrpcMethod('ArtistService', 'GetArtist')
-  async findOne(@Payload() payload: GetArtistDto) {
-    const res = await this.artistService.findById(payload.id);
+  @GrpcMethod('AlbumService', 'GetAlbum')
+  async findOne(@Payload() payload: GetAlbumDto) {
+    const res = await this.albumService.findById(payload.id);
     this.logger.log(res);
-    return { artist: res };
+    return { album: res };
   }
 
-  @GrpcMethod('ArtistService', 'UpdateArtist')
-  async update(@Payload() payload: UpdateArtistPayloadDto) {
+  @GrpcMethod('AlbumService', 'UpdateAlbum')
+  async update(@Payload() payload: UpdateAlbumPayloadDto) {
     const { id, ...dto } = payload;
-    const res = await this.artistService.update(id, dto);
+    const res = await this.albumService.update(id, dto);
     this.logger.log(res);
-    return { artist: res };
+    return { album: res };
   }
 
-  @GrpcMethod('ArtistService', 'DeleteArtist')
-  async delete(@Payload() payload: DeleteArtistDto) {
-    const res = await this.artistService.delete(payload.id);
+  @GrpcMethod('AlbumService', 'DeleteAlbum')
+  async delete(@Payload() payload: DeleteAlbumDto) {
+    const res = await this.albumService.delete(payload.id);
     this.logger.log(res);
     return undefined;
   }

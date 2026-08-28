@@ -1,30 +1,30 @@
 import { EntityNotFoundError } from '../../shared/errors/domain-errors';
-import { Artist } from './artist.entity';
+import { Album } from './album.entity';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArtistService } from './artist.service';
-import { ArtistRepo } from '../../infrastrusture/artist/artist.repo';
-import { ArtistFixtures } from './fixtures/artist.fixture';
-import { createArtistRepoMock } from './mocks/artist.mock';
+import { AlbumService } from './album.service';
+import { AlbumRepo } from '../../infrastrusture/album/album.repo';
+import { AlbumFixtures } from './fixtures/album.fixture';
+import { createAlbumRepoMock } from './mocks/album.mock';
 
-describe('ArtistService', () => {
-  let service: ArtistService;
-  let repo: ArtistRepo;
+describe('AlbumService', () => {
+  let service: AlbumService;
+  let repo: AlbumRepo;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ArtistService,
+        AlbumService,
         {
-          provide: ArtistRepo,
-          useValue: createArtistRepoMock(),
+          provide: AlbumRepo,
+          useValue: createAlbumRepoMock(),
         },
       ],
     }).compile();
 
-    service = module.get<ArtistService>(ArtistService);
-    repo = module.get<ArtistRepo>(ArtistRepo);
+    service = module.get<AlbumService>(AlbumService);
+    repo = module.get<AlbumRepo>(AlbumRepo);
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -32,10 +32,10 @@ describe('ArtistService', () => {
   });
 
   describe('create', () => {
-    it('should return created artist', async () => {
-      const dto = ArtistFixtures.createDto();
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(repo, 'create').mockResolvedValue(expected);
+    it('should return created album', async () => {
+      const dto = AlbumFixtures.createDto();
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(repo, 'create').mockResolvedValue(expected);
 
       const result = await service.create(dto);
 
@@ -45,9 +45,9 @@ describe('ArtistService', () => {
   });
 
   describe('findAll', () => {
-    it('should return a list of artists', async () => {
-      const expected = ArtistFixtures.array();
-      jest.spyOn(repo, 'findAll').mockResolvedValue(expected);
+    it('should return a list of albums', async () => {
+      const expected = AlbumFixtures.array();
+      vi.spyOn(repo, 'findAll').mockResolvedValue(expected);
 
       const result = await service.findAll();
 
@@ -55,9 +55,9 @@ describe('ArtistService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return an empty list if no artists are found', async () => {
+    it('should return an empty list if no albums are found', async () => {
       const expected = [];
-      jest.spyOn(repo, 'findAll').mockResolvedValue(expected);
+      vi.spyOn(repo, 'findAll').mockResolvedValue(expected);
 
       const result = await service.findAll();
 
@@ -67,21 +67,21 @@ describe('ArtistService', () => {
   });
 
   describe('findById', () => {
-    it('should return an artist', async () => {
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(repo, 'findById').mockResolvedValue(expected);
+    it('should return an album', async () => {
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(repo, 'findById').mockResolvedValue(expected);
 
       const result = await service.findById(expected.id);
 
       expect(repo.findById).toHaveBeenCalledWith(expected.id);
       expect(result).toEqual(expected);
-      expect(result).toBeInstanceOf(Artist);
+      expect(result).toBeInstanceOf(Album);
     });
 
-    it('should throw an error if the artist is not found', async () => {
-      jest
+    it('should throw an error if the album is not found', async () => {
+      vi
         .spyOn(repo, 'findById')
-        .mockRejectedValue(new EntityNotFoundError('artist'));
+        .mockRejectedValue(new EntityNotFoundError('album'));
 
       const result = service.findById('non-existent-id');
 
@@ -91,10 +91,10 @@ describe('ArtistService', () => {
   });
 
   describe('update', () => {
-    it('should return the updated artist', async () => {
-      const dto = ArtistFixtures.updateDto();
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(repo, 'update').mockResolvedValue(expected);
+    it('should return the updated album', async () => {
+      const dto = AlbumFixtures.updateDto();
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(repo, 'update').mockResolvedValue(expected);
 
       const result = await service.update(expected.id, dto);
 
@@ -102,11 +102,11 @@ describe('ArtistService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should throw an error if the artist is not found', async () => {
-      const dto = ArtistFixtures.updateDto();
-      jest
+    it('should throw an error if the album is not found', async () => {
+      const dto = AlbumFixtures.updateDto();
+      vi
         .spyOn(repo, 'update')
-        .mockRejectedValue(new EntityNotFoundError('artist'));
+        .mockRejectedValue(new EntityNotFoundError('album'));
 
       const result = service.update('non-existent-id', dto);
 
@@ -117,8 +117,8 @@ describe('ArtistService', () => {
 
   describe('delete', () => {
     it('should return undefined on success', async () => {
-      const expected = ArtistFixtures.entity();
-      jest.spyOn(repo, 'delete').mockResolvedValue(true);
+      const expected = AlbumFixtures.entity();
+      vi.spyOn(repo, 'delete').mockResolvedValue(true);
 
       const result = await service.delete(expected.id);
 
@@ -126,10 +126,10 @@ describe('ArtistService', () => {
       expect(result).toEqual(true);
     });
 
-    it('should throw an error if the artist is not found', async () => {
-      jest
+    it('should throw an error if the album is not found', async () => {
+      vi
         .spyOn(repo, 'delete')
-        .mockRejectedValue(new EntityNotFoundError('artist'));
+        .mockRejectedValue(new EntityNotFoundError('album'));
 
       const result = service.delete('non-existent-id');
 

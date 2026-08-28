@@ -1,6 +1,6 @@
 import { IsUUID } from 'class-validator';
 
-export class GetArtistDto {
+export class GetAlbumDto {
   @IsUUID()
   id: string;
 }
