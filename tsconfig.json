@@ -23,7 +23,7 @@
     "paths": {
       "@prisma/generated": ["./prisma/generated"]
     },
-    "types": ["jest"],
+    "types": ["vitest/globals"],
     "strict": true,
     "strictPropertyInitialization": false
   }
