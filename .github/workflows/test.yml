@@ -37,8 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           rm -rf node_modules
-          pnpm update @juice11-micro/contracts
-          pnpm install --frozen-lockfile --shamefully-hoist
+          pnpm install --frozen-lockfile
 
       # Generate /generated folder with SQL queries
       - name: Generate SQL Types
