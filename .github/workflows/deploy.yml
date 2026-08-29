@@ -7,6 +7,15 @@ on:
 jobs:
   deploy:
     runs-on: local-ubuntu # local runner
+    env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }} 
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+        DATABASE_USER: ${{ secrets.DATABASE_USER }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_DB: ${{ secrets.DATABASE_DB }}
+        GRPC_HOST: ${{ secrets.GRPC_HOST }}
+        GRPC_PORT: ${{ secrets.GRPC_PORT }}
 
     steps:
       - name: Checkout repository
