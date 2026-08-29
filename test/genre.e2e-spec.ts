@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import '@grpc/proto-loader';
+import '@grpc/grpc-js'
 import { GrpcValidationPipe } from '../src/infrastrusture/grpc/grpc.validation-pipe';
 import { GlobalGrpcExceptionFilter } from '../src/infrastrusture/grpc/grpc.filter';
 import { INestMicroservice } from '@nestjs/common';

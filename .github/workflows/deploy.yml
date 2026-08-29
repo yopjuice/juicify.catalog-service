@@ -1,0 +1,55 @@
+name: Deploy to Local Machine
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: local-ubuntu # local runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # Make sure pnpm is installed
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11
+
+      - name: Copy source files to deploy folder
+        run: |
+          rm -rf ~/juicify-deploy
+          mkdir -p ~/juicify-deploy
+          rsync -vrax --delete --exclude='node_modules' ./ ~/juicify-deploy/
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          cd ~/juicify-deploy
+          pnpm update @juice11-micro/contracts
+          pnpm install --no-frozen-lockfile
+
+      # Generate /generated folder with SQL queries
+      - name: Generate SQL Types
+        run: |
+          cd ~/juicify-deploy
+          pnpm run db:types
+
+      # Compile code
+      - name: Build application
+        run: |
+          cd ~/juicify-deploy
+          pnpm build
+
+      # Start application with pm2
+      - name: Start/Restart Application
+        run: |
+          cd ~/juicify-deploy
+          pm2 start dist/src/main.js --name "juicify" || pm2 restart nestjs-local-prod

@@ -22,17 +22,21 @@
     "start:threads": "tsx ./src/app/threads/producer.js",
     "start:pool": "tsx ./src/app/threads/pool.ts",
     "init-db": "tsx ./src/scripts/init-db.ts",
-    "db:diff": "PGPASSWORD='postgres' psqldef -U postgres -h localhost -p 5432 juicify  --dry-run < sql/schema.sql",
-    "db:apply": "PGPASSWORD='postgres' psqldef -U postgres -h localhost -p 5432 juicify  < sql/schema.sql",
+    "_db:diff:run": "psqldef -U $DATABASE_USER -h $DATABASE_HOST -W $DATABASE_PASSWORD $DATABASE_DB --dry-run < sql/schema.sql",
+    "db:diff": "dotenv -- pnpm run _db:diff:run",
+    "_db:apply:run": "psqldef -U $DATABASE_USER -h $DATABASE_HOST -W $DATABASE_PASSWORD $DATABASE_DB < sql/schema.sql",
+    "db:apply": "dotenv -- pnpm run _db:apply:run",
     "db:types": "pnpm exec dotenv -e .env -- pnpm exec pgtyped -c pgtyped.config.json",
     "test:unit": "node --import tsx --test src/**/*.unit.test.ts",
-    "test:integration": "node --import tsx --test src/**/*.integration.test.ts"
+    "test:integration": "node --import tsx --test src/**/*.integration.test.ts",
+    "dry-ci": "act ",
+    "dry-cd": "act -P local-ubuntu=-self-hosted"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.1",
     "@grpc/reflection": "^1.0.4",
-    "@juice11-micro/contracts": "workspace:*",
+    "@juice11-micro/contracts": "^1.0.2",
     "@nestjs/common": "^12.0.1",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^12.0.1",
@@ -95,7 +99,13 @@
       "node_modules/(?!\\.pnpm/|@nestjs)"
     ],
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!main.(t|j)s",
+      "!**/*.module.(t|j)s",
+      "!**/*.dto.(t|j)s",
+      "!**/*.options.(t|j)s",
+      "!**/*.fixture.(t|j)s",
+      "!**/*.mock.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
