@@ -38,8 +38,8 @@ jobs:
         run: |
           rm -rf node_modules
           pnpm store prune
+          pnpm install --frozen-lockfile
           pnpm update @juice11-micro/contracts
-          pnpm install --no-frozen-lockfile
 
       # Generate /generated folder with SQL queries
       - name: Generate SQL Types
