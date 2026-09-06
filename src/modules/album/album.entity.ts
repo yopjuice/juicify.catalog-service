@@ -4,7 +4,6 @@ export interface AlbumProps {
   releaseDate?: Date;
   coverUrl?: string;
   type: AlbumType;
-  genreId: string;
   artistId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -13,7 +12,7 @@ export interface AlbumProps {
 export const AlbumType = {
   LP: 'LP',
   EP: 'EP',
-  Single: 'Single',
+  Single: 'SINGLE',
 } as const;
 
 export type AlbumType = typeof AlbumType[keyof typeof AlbumType];
@@ -41,9 +40,6 @@ export class Album {
   }
   public get type(): AlbumType {
     return this.props.type;
-  }
-  public get genreId(): string {
-    return this.props.genreId;
   }
   public get artistId(): string {
     return this.props.artistId;

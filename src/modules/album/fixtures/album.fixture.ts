@@ -3,9 +3,9 @@ import {
   DbAlbum,
 } from '../../../infrastrusture/album/album.mapper';
 import { AlbumProps, AlbumType } from '../album.entity';
-import { UpdateAlbumDto } from '../dto/update-album.dto';
 import { Album } from '../album.entity';
-import { CreateAlbumDto } from '../dto/create-album.dto';
+import {  CreateAlbumInput } from '../dto/create-album.dto';
+import {  UpdateAlbumInput } from '../dto/update-album.dto';
 
 // Default database object
 const baseDbAlbum = {
@@ -13,8 +13,7 @@ const baseDbAlbum = {
   title: 'Greatest Album',
   release_date: new Date('1970-01-01T00:00:00.000Z'),
   cover_url: 'https://example.com',
-  type: 'EP',
-  genre_id: '5176cfd5-954f-46a1-bdb5-b4006a24ffcd',
+  type: AlbumType.EP,
   artist_id: '5176cfd5-954f-46a1-bdb5-b4006a24ffcd',
   created_at: new Date('1970-01-01T00:00:00.000Z'),
   updated_at: new Date('1970-01-01T00:00:00.000Z'),
@@ -31,18 +30,17 @@ export const AlbumFixtures = {
     }),
 
   // Generates an incoming gRPC DTO payload
-  createDto: (overrides?: Partial<CreateAlbumDto>): CreateAlbumDto => ({
+  createDto: (overrides?: Partial<CreateAlbumInput>): CreateAlbumInput => ({
     title: baseDbAlbum.title,
     releaseDate: baseDbAlbum.release_date.toISOString(),
     type: baseDbAlbum.type,
     coverUrl: baseDbAlbum.cover_url,
-    genreId: baseDbAlbum.genre_id,
     artistId: baseDbAlbum.artist_id,
     ...overrides,
   }),
 
   // Generates an incoming gRPC DTO payload
-  updateDto: (overrides?: Partial<UpdateAlbumDto>): UpdateAlbumDto => ({
+  updateDto: (overrides?: Partial<UpdateAlbumInput>): UpdateAlbumInput => ({
     title: 'updated title',
     ...overrides,
   }),
@@ -77,7 +75,6 @@ export const AlbumFixtures = {
     releaseDate: new Date(),
     coverUrl: 'https://example.com',
     type: AlbumType.EP,
-    genreId: '5176cfd5-954f-46a1-bdb5-b4006a24ffcd',
     artistId: '5176cfd5-954f-46a1-bdb5-b4006a24ffcd',
     createdAt: new Date(),
     updatedAt: new Date(),

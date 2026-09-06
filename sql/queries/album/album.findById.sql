@@ -1,3 +1,3 @@
 /* @name AlbumFindById */
 SELECT * FROM albums
-WHERE id = :id;
+WHERE id = :id!;

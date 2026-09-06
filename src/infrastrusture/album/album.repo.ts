@@ -29,7 +29,6 @@ export class AlbumRepo {
       release_date: dto.releaseDate,
       cover_url: dto.coverUrl || null,
       type: dto.type || AlbumType.Single,
-      genre_id: dto.genreId,
       artist_id: dto.artistId,
     }) as DbAlbum;
     return AlbumMapper.toDomain(row);

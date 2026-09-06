@@ -12,7 +12,6 @@ describe('Album Entity', () => {
       expect(album.releaseDate).toBe(props.releaseDate);
       expect(album.coverUrl).toBe(props.coverUrl);
       expect(album.type).toBe(props.type);
-      expect(album.genreId).toBe(props.genreId);
       expect(album.artistId).toBe(props.artistId);
       expect(album.createdAt).toBe(props.createdAt);
       expect(album.updatedAt).toBe(props.updatedAt);
