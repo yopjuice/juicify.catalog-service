@@ -36,8 +36,8 @@
     "db:apply:test": "dotenv -e .env.test -- pnpm run _db:apply:run",
     "db:types:test": "dotenv -e .env.test -- pnpm exec pgtyped -c pgtyped.config.json",
 
-    "dry-ci": "act pull_request -P local-ubuntu=-self-hosted",
-    "dry-cd": "act -P local-ubuntu=-self-hosted"
+    "dry-ci": "act pull_request -P local-ubuntu=-self-hosted --env-file=.env.test",
+    "dry-cd": "act -P local-ubuntu=-self-hosted --env-file=.env.test"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
