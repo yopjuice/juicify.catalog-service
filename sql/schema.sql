@@ -54,8 +54,8 @@ CREATE TABLE "tracks" (
     "id" TEXT DEFAULT gen_random_uuid()::TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "duration" INTEGER NOT NULL,
-    "order_number" INTEGER NOT NULL,
-    "album_id" TEXT NOT NULL,
+    "order_number" INTEGER,
+    "album_id" TEXT,
     "artist_id" TEXT NOT NULL,
     "path_key" TEXT,
     "cover_url" TEXT,
@@ -65,8 +65,9 @@ CREATE TABLE "tracks" (
     "updated_at" TIMESTAMP (3) NOT NULL DEFAULT current_timestamp,
 
     CONSTRAINT "tracks_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "tracks_album_id_fkey" FOREIGN KEY ("album_id") REFERENCES "albums" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "tracks_artist_id_fkey" FOREIGN KEY ("artist_id") REFERENCES "artists" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "tracks_album_id_fkey" FOREIGN KEY ("album_id") REFERENCES "albums" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "tracks_artist_id_fkey" FOREIGN KEY ("artist_id") REFERENCES "artists" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "tracks_album_id_order_number_key" UNIQUE ("album_id", "order_number")
 );
 
 CREATE TABLE "_GenreToTrack" (
