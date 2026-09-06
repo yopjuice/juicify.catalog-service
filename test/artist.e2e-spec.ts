@@ -17,6 +17,7 @@ import { ArtistRepo } from '../src/infrastrusture/artist/artist.repo';
 import { ArtistFixtures } from '../src/modules/artist/fixtures/artist.fixture';
 import { GrpcToPromise } from '../src/shared/types';
 import { ArtistGrpc } from '../src/infrastrusture/artist/artist.client';
+import getFreePort from 'get-port';
 
 // TODO: add separate database for testing
 describe('Artist gRPC (e2e)', () => {
@@ -27,6 +28,12 @@ describe('Artist gRPC (e2e)', () => {
   let repo: ArtistRepo;
 
   beforeAll(async () => {
+
+    // use any free port for testing
+    const testPort = await getFreePort();
+    process.env.GRPC_PORT = testPort.toString();
+
+
     // Create testing module with all dependencies
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],

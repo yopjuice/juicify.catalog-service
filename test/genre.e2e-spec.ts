@@ -17,6 +17,7 @@ import { GenreRepo } from '../src/infrastrusture/genre/genre.repo';
 import { GenreFixtures } from '../src/modules/genre/fixtures/genre.fixture';
 import { GrpcToPromise } from '../src/shared/types';
 import { GenreGrpc } from '../src/infrastrusture/genre/genre.client';
+import getFreePort from 'get-port';
 
 // TODO: add separate database for testing
 describe('Genre gRPC (e2e)', () => {
@@ -27,6 +28,12 @@ describe('Genre gRPC (e2e)', () => {
   let repo: GenreRepo;
 
   beforeAll(async () => {
+
+    // use any free port for testing
+    const testPort = await getFreePort();
+    process.env.GRPC_PORT = testPort.toString();
+
+
     // Create testing module with all dependencies
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
