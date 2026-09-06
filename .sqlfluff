@@ -1,7 +1,6 @@
 [sqlfluff]
 # Указываем диалект PostgreSQL
 dialect = postgres
-
 # Набор правил (all — проверять всё, кроме исключений ниже)
 rules = all
 
@@ -36,3 +35,10 @@ capitalisation_policy = upper
 [sqlfluff:rules:aliasing.length]
 # Разрешаем короткие алиасы для таблиц (например, "FROM users u")
 min_alias_length = 1
+
+[sqlfluff:core]
+templater = placeholder
+
+[sqlfluff:templater:placeholder]
+# Notice the ! is now OUTSIDE the named group (?P<param_name>...)
+param_regex = :(?P<param_name>[\w_]+)!

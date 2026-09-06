@@ -1,5 +1,5 @@
 -- 1. Создание перечислений (Enums)
-CREATE TYPE "AlbumType" AS ENUM ('LP', 'EP', 'Single');
+CREATE TYPE "AlbumType" AS ENUM ('LP', 'EP', 'SINGLE');
 CREATE TYPE "TrackStatus" AS ENUM ('READY', 'PENDING', 'ERROR');
 
 CREATE TABLE "genres" (
@@ -30,14 +30,24 @@ CREATE TABLE "albums" (
     "release_date" TIMESTAMP (3),
     "cover_url" TEXT,
     "type" "AlbumType" NOT NULL,
-    "genre_id" TEXT NOT NULL,
     "artist_id" TEXT NOT NULL,
     "created_at" TIMESTAMP (3) NOT NULL DEFAULT current_timestamp,
     "updated_at" TIMESTAMP (3) NOT NULL DEFAULT current_timestamp,
 
     CONSTRAINT "albums_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "albums_genre_id_fkey" FOREIGN KEY ("genre_id") REFERENCES "genres" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "albums_artist_id_fkey" FOREIGN KEY ("artist_id") REFERENCES "artists" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE "album_genres" (
+    "album_id" TEXT NOT NULL,
+    "genre_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP (3) NOT NULL DEFAULT current_timestamp,
+    "updated_at" TIMESTAMP (3) NOT NULL DEFAULT current_timestamp,
+
+    CONSTRAINT "album_genres_pkey" PRIMARY KEY ("album_id", "genre_id"),
+
+    CONSTRAINT "album_genres_album_id_fkey" FOREIGN KEY ("album_id") REFERENCES "albums" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "album_genres_genre_id_fkey" FOREIGN KEY ("genre_id") REFERENCES "genres" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE "tracks" (
