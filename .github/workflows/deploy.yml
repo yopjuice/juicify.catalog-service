@@ -34,31 +34,32 @@ jobs:
 
       - name: Copy source files to deploy folder
         run: |
-          rm -rf ~/juicify-deploy
-          mkdir -p ~/juicify-deploy
-          rsync -vrax --delete --exclude='node_modules' ./ ~/juicify-deploy/
+          mkdir -p ~/juicify-deploy/catalog
+          rsync -vrax --delete --exclude='node_modules' ./ ~/juicify-deploy/catalog/
+          cd ~/juicify-deploy/catalog
 
       # Install dependencies
       - name: Install dependencies
         run: |
-          cd ~/juicify-deploy
+          pnpm store prune
+          cd ~/juicify-deploy/catalog
+          pnpm install --frozen-lockfile
           pnpm update @juice11-micro/contracts
-          pnpm install --no-frozen-lockfile
 
       # Generate /generated folder with SQL queries
       - name: Generate SQL Types
         run: |
-          cd ~/juicify-deploy
+          cd ~/juicify-deploy/catalog
           pnpm run db:types
 
       # Compile code
       - name: Build application
         run: |
-          cd ~/juicify-deploy
+          cd ~/juicify-deploy/catalog
           pnpm build
 
       # Start application with pm2
       - name: Start/Restart Application
         run: |
-          cd ~/juicify-deploy
-          pm2 start dist/src/main.js --name "juicify" || pm2 restart nestjs-local-prod
+          cd ~/juicify-deploy/catalog
+          pm2 restart "juicify-catalog" --update-env || pm2 start dist/src/main.js --name "juicify-catalog"
